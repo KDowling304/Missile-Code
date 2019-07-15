@@ -15,27 +15,38 @@ import matplotlib.pyplot as plt
 from copy import copy
 import math
 from Ship import Ship
+from Missile import Missile
 
 
 if __name__ == "__main__":
     #read in policy parameters from an Excel spreadsheet, "missile_policy_parameters.xlsx"
     sheet1 = pd.read_excel("missile_policy_parameters.xlsx", sheet_name="Sheet1")
+    sheet2 = pd.read_excel("missile_policy_parameters.xlsx", sheet_name="Sheet2")
     
     #state variables
-    #Ship
-    BlueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
+    #Ships
+    blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0])
-    RedShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
+    redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1])
-    BlueShip.printShip()
-    RedShip.printShip()
+    blueShip.printShip()
+    redShip.printShip()
     
-    #list of offensive missiles fired by BlueShip
-    BlueOffensiveMissiles = []
-    #list of defensive missiles fired by BlueShip
-    BlueDefensiveMissiles = []
-    #list of offensive missiles fired by RedShip
-    RedOffensiveMissiles = []
-    #list of defensive missiles fired by RedShip
-    RedDefensiveMissiles = []
+    #Missiles Lists
+    #list of offensive missiles fired by blueShip
+    blueOffensiveMissiles = []
+    #list of defensive missiles fired by blueShip
+    blueDefensiveMissiles = []
+    #list of offensive missiles fired by redShip
+    redOffensiveMissiles = []
+    #list of defensive missiles fired by redShip
+    redDefensiveMissiles = []
+    
+    #speeds of missiles/ships from Excel spreadsheet
+    #missileSpeed in knots
+    missileSpeed = sheet2['Missile Speed (kn)'][0]
+    shipSpeed = sheet2['Ship Speed (kn)'][0]
+    print("Missile speed: " + str(missileSpeed) + " knots")
+    print("Ship speed: " + str(shipSpeed) + " knots")
+    
     
