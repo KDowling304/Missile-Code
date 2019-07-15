@@ -18,11 +18,11 @@ from Ship import Ship
 
 
 if __name__ == "__main__":
-    # read in policy parameters from an Excel spreadsheet, "missile_policy_parameters.xlsx"
+    #read in policy parameters from an Excel spreadsheet, "missile_policy_parameters.xlsx"
     sheet1 = pd.read_excel("missile_policy_parameters.xlsx", sheet_name="Sheet1")
     
-    # state variables
-    # Ship
+    #state variables
+    #Ship
     BlueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0])
     RedShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
@@ -30,6 +30,12 @@ if __name__ == "__main__":
     BlueShip.printShip()
     RedShip.printShip()
     
-    
-    
+    #list of offensive missiles fired by BlueShip
+    BlueOffensiveMissiles = []
+    #list of defensive missiles fired by BlueShip
+    BlueDefensiveMissiles = []
+    #list of offensive missiles fired by RedShip
+    RedOffensiveMissiles = []
+    #list of defensive missiles fired by RedShip
+    RedDefensiveMissiles = []
     
