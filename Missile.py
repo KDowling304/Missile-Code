@@ -13,7 +13,7 @@ class Missile():
     self.dloc = dloc #destination of missile on 1D scale
     #probability that missile will hit intended target if unimpeded
     self.probHit = probHit 
-    self.timeDest = timeHit
+    self.timeDest = timeDest
    
   #print current information about instance of Ship
   def printMissile(self):
