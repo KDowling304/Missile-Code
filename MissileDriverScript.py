@@ -46,7 +46,23 @@ if __name__ == "__main__":
     #missileSpeed in knots
     missileSpeed = sheet2['Missile Speed (kn)'][0]
     shipSpeed = sheet2['Ship Speed (kn)'][0]
-    print("Missile speed: " + str(missileSpeed) + " knots")
-    print("Ship speed: " + str(shipSpeed) + " knots")
+    print("Missile Speed: " + str(missileSpeed) + " knots")
+    print("Ship Speed: " + str(shipSpeed) + " knots")
+    
+    #time step for each iteration of "game" in minuntes
+    timeStep = sheet2['Time Step (minutes)'][0]
+    print("Time Step: " + str(timeStep) + " minutes")
+    
+    #Decision variables that determine scouting effectiveness but also have cost
+    satellite = False #not communicating with satellite
+    radar = False #active radar turned off
+    electronicSurveillance = False #electronic surveillance equipment off
+    passiveSensors = False #passive acoustic sensors off
+    uav = False #Unmanned Aerial Vehicle (UAV) not deployed
+    usv = False #Unmanned Surface Vehicle (USV) not deployed
+   
+    #Weather affects scouting effectiveness
+    goodWeather = False #bad weather (True is good weather)
+    
     
     
