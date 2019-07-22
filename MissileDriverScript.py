@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 from copy import copy
 import math
 from Ship import Ship
-from Missile import Missile
+from OffensiveMissile import OffensiveMissile
+from DefensiveMissile import DefensiveMissile
 
 
 if __name__ == "__main__":
@@ -33,14 +34,15 @@ if __name__ == "__main__":
     redShip.printShip()
     
     #Missiles Lists
+    #initialize empty lists with size of arsenals
     #list of offensive missiles fired by blueShip
-    blueOffensiveMissiles = []
+    blueOffensiveMissiles = [None] * blueShip.oml
     #list of defensive missiles fired by blueShip
-    blueDefensiveMissiles = []
+    blueDefensiveMissiles = [None] * blueShip.dml
     #list of offensive missiles fired by redShip
-    redOffensiveMissiles = []
+    redOffensiveMissiles = [None] * redShip.oml
     #list of defensive missiles fired by redShip
-    redDefensiveMissiles = []
+    redDefensiveMissiles = [None] * redShip.dml
     
     #speeds of missiles/ships from Excel spreadsheet
     #missileSpeed in knots
