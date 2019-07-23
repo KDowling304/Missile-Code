@@ -18,6 +18,13 @@ class Ship():
     self.dmf = 0 #defensive missiles left in ship's arsenal (start with 0)
     #defensive missiles left in ship's arsenal ( typically start with 60)
     self.dml = defensiveMissileTotal - self.dmf 
+    #Missiles Lists
+    #initialize empty lists with size of arsenals
+    #list of offensive missiles fired by particular ship
+    self.offensiveMissileList = [None] * self.oml
+    #list of defensive missiles fired by particular ship
+    self.defensiveMissileList = [None] * self.dml
+
    
   #print current information about instance of Ship
   def printShip(self):

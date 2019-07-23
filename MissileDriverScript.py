@@ -33,7 +33,7 @@ if __name__ == "__main__":
     blueShip.printShip()
     redShip.printShip()
     
-    #Missiles Lists
+    '''#Missiles Lists
     #initialize empty lists with size of arsenals
     #list of offensive missiles fired by blueShip
     blueOffensiveMissiles = [None] * blueShip.oml
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     #list of offensive missiles fired by redShip
     redOffensiveMissiles = [None] * redShip.oml
     #list of defensive missiles fired by redShip
-    redDefensiveMissiles = [None] * redShip.dml
+    redDefensiveMissiles = [None] * redShip.dml'''
     
     #speeds of missiles/ships from Excel spreadsheet
     #missileSpeed in knots

@@ -7,17 +7,18 @@ Created on Mon Jul 15 13:58:51 2019
 """
 
 class DefensiveMissile():
-  def __init__(self, oloc, target, probHit, timeDest):
-    self.cloc = oloc #origin of missile on 1D scale
-    self.target = target #target missile or ship
-    #probability that missile will hit intended target if unimpeded
-    self.probHit = probHit 
-    self.timeDest = timeDest
+  def __init__(self, loc, target):
+    self.loc = loc #location of missile on 1D scale
+    self.target = target #target missile
+    #direction of missile flight
+    self.directionalVelocity = self.target.loc - self.loc 
+    #is the missile still flying
+    #false if reached destination already or if has been hit 
+    self.flying = True
    
   #print current information about instance of Ship
   def printMissile(self):
-    print("Current location of missile: " + str(self.oloc) + " on the 1D scale")
+    print("Current location of missile: " + str(self.loc) + " on the 1D scale")
     print("Missile target: " + str(self.dloc) + " on the 1D scale")
-    print("Probability of success of missile: " + str(self.probHit))
-    print("Time until missile reachest destination: " + str(self.timeDest))
+    print("Missile still flying: " + str(self.flying))
     print('')
