@@ -25,11 +25,26 @@ if __name__ == "__main__":
     sheet2 = pd.read_excel("missile_policy_parameters.xlsx", sheet_name="Sheet2")
     
     #state variables
+    
+    #speeds of missiles/ships from Excel spreadsheet
+    #missileSpeed and shipSpeed in knots
+    shipSpeed = sheet2['Ship Speed (kn)'][0]
+    missileSpeed = sheet2['Missile Speed (kn)'][0]
+    print("Ship Speed: " + str(shipSpeed) + " knots")
+    print("Missile Speed: " + str(missileSpeed) + " knots")
+    
+    #time step for each iteration of "game" in minuntes
+    timeStep = sheet2['Time Step (minutes)'][0]
+    print("Time Step: " + str(timeStep) + " minutes")
+    print('')
+    
     #Ships
     blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
-                sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0])
+                sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0], 
+                shipSpeed, missileSpeed, timeStep)
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
-                sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1])
+                sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
+                shipSpeed, missileSpeed, timeStep)
     blueShip.printShip()
     redShip.printShip()
     
@@ -44,17 +59,7 @@ if __name__ == "__main__":
     #list of defensive missiles fired by redShip
     redDefensiveMissiles = [None] * redShip.dml'''
     
-    #speeds of missiles/ships from Excel spreadsheet
-    #missileSpeed in knots
-    missileSpeed = sheet2['Missile Speed (kn)'][0]
-    shipSpeed = sheet2['Ship Speed (kn)'][0]
-    print("Missile Speed: " + str(missileSpeed) + " knots")
-    print("Ship Speed: " + str(shipSpeed) + " knots")
-    
-    #time step for each iteration of "game" in minuntes
-    timeStep = sheet2['Time Step (minutes)'][0]
-    print("Time Step: " + str(timeStep) + " minutes")
-    
+
     #Decision variables that determine scouting effectiveness but also have cost
     satellite = False #not communicating with satellite
     radar = False #active radar turned off

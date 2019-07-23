@@ -8,7 +8,7 @@ Created on Mon Jul 15 13:58:51 2019
 
 class OffensiveMissile():
     
-    def __init__(self, loc, target):
+    def __init__(self, loc, target, missileSpeed):
         self.loc = loc #location of missile on 1D scale
         self.target = target #target ship (Red Ship or Blue Ship)
         #direction of missile flight
@@ -16,10 +16,13 @@ class OffensiveMissile():
         #is the missile still flying
         #false if reached destination already or if has been hit 
         self.flying = True
+        #missile speed when flying
+        self.missileSpeed = missileSpeed
         
-    def moveMissile(self):
+    #moves particular missile the specified distance per timeStep
+    def moveMissile(self, timeStep):
         if(self.flying == True):
-            self.loc = self.loc + self.directionalVelocity * missileVelocity
+            self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * self.timeStep
         
         
     #print current information about instance of Ship
@@ -28,5 +31,4 @@ class OffensiveMissile():
         print("Missile target: " + str(self.dloc) + " on the 1D scale")
         print("Missile still flying: " + str(self.flying))
         print('')
-    
     
