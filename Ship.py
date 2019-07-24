@@ -5,6 +5,8 @@ Created on Mon Jul 15 08:43:13 2019
 
 @author: karadowling
 """
+from OffensiveMissile import OffensiveMissile
+from DefensiveMissile import DefensiveMissile
 
 class Ship():
     def __init__(self, shipName, loc, offensiveMissileTotal, defensiveMissileTotal, shipSpeed, missileSpeed, timeStep, missileRange):
@@ -18,12 +20,6 @@ class Ship():
         self.dmf = 0 #defensive missiles left in ship's arsenal (start with 0)
         #defensive missiles left in ship's arsenal ( typically start with 60)
         self.dml = defensiveMissileTotal - self.dmf 
-        #Missiles Lists
-        #initialize empty lists with size of arsenals
-        #list of offensive missiles fired by particular ship
-        self.offensiveMissileList = [None] * self.oml
-        #list of defensive missiles fired by particular ship
-        self.defensiveMissileList = [None] * self.dml
         #speed of ship when moving
         self.shipSpeed = shipSpeed
         #speed of all missiles when launched
@@ -32,6 +28,17 @@ class Ship():
         self.timeStep = timeStep
         #range of ship's missiles
         self.missileRange = missileRange
+        #Missiles Lists
+        #initialize empty lists with size of arsenals
+        #list of offensive missiles fired by particular ship
+        self.offensiveMissileList = [None] * self.oml
+        for missile in self.offensiveMissileList:
+            missile = OffensiveMissile(loc, None, missileSpeed)
+        #list of defensive missiles fired by particular ship
+        self.defensiveMissileList = [None] * self.dml
+        for missile in self.defensiveMissileList:
+            missile = DefensiveMissile(loc, None, missileSpeed)
+            
    
     #print current information about instance of Ship
     def printShip(self):
@@ -61,8 +68,8 @@ class Ship():
     def findShipTargets(self, otherShip):
         #if ship is in range, has it been shot at?, decide to shoot again or not
         if (abs(otherShip.loc - self.loc) <= self.missileRange):
+            shotAt = False
             for missile in self.offensiveMissileList:
-                shotAt = False
                 #only need to check if flying because simulation ends when a ship is hit
                 #therefore either the offensive missile was unsuccessful already or hasn't been shot at
                 if(missile.flying == True):

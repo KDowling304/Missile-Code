@@ -11,18 +11,28 @@ class OffensiveMissile():
     def __init__(self, loc, target, missileSpeed):
         self.loc = loc #location of missile on 1D scale
         self.target = target #target ship (Red Ship or Blue Ship)
-        #direction of missile flight
-        self.directionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
-        #is the missile still flying
+        #is the missile flying
         #false if reached destination already or if has been hit 
-        self.flying = True
+        self.flying = False
         #missile speed when flying
         self.missileSpeed = missileSpeed
+        #direction of missile flight
+        self.directionalVelocity = None
+
         
     #moves particular missile the specified distance per timeStep
     def moveMissile(self, timeStep):
         if(self.flying == True):
             self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * self.timeStep
+            
+    def setTarget(self, target):
+        self.target = target
+        #direction of missile flight
+        if self.target != None:
+            self.directionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
+        
+    def setFlyingStatus(self, flyingStatus):
+        self.flying = flyingStatus
         
         
     #print current information about instance of Ship

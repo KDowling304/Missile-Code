@@ -7,26 +7,39 @@ Created on Mon Jul 15 13:58:51 2019
 """
 
 class DefensiveMissile():
-  def __init__(self, loc, target, missileSpeed):
-    self.loc = loc #location of missile on 1D scale
-    self.target = target #target missile
-    #direction of missile flight
-    self.directionalVelocity = self.target.loc - self.loc 
-    #is the missile still flying
-    #false if reached destination already or if has been hit 
-    self.flying = True
-    #missile speed when flying
-    self.missileSpeed = missileSpeed
-
-
-  #moves particular missile the specified distance per timeStep
-  def moveMissile(self, timeStep):
-    if(self.flying == True):
-        self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * self.timeStep
+   def __init__(self, loc, target, missileSpeed):
+       self.loc = loc #location of missile on 1D scale
+       self.target = target #target missile
+       #is the missile flying
+       #false if reached destination already or if has been hit 
+       self.flying = False
+       #missile speed when flying
+       self.missileSpeed = missileSpeed
+       #direction of missile flight
+       self.directionalVelocity = None
+       
+   #moves particular missile the specified distance per timeStep
+   def moveMissile(self, timeStep):
+       if(self.flying == True):
+           self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * self.timeStep
    
+   def setTarget(self, target):
+       self.target = target
+       #direction of missile flight
+       if self.target != None:
+           self.directionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
+        
+   def setFlyingStatus(self, flyingStatus):
+       self.flying = flyingStatus
+       
+   #launches missile which means giving a missile a target and setting it to flying
+   def launchMissile(self, target):
+       self.setTarget(target)
+       self.setFlyingStatus(True)
+
   #print current information about instance of Ship
-  def printMissile(self):
-    print("Current location of missile: " + str(self.loc) + " on the 1D scale")
-    print("Missile target: " + str(self.dloc) + " on the 1D scale")
-    print("Missile still flying: " + str(self.flying))
-    print('')
+   def printMissile(self):
+       print("Current location of missile: " + str(self.loc) + " on the 1D scale")
+       print("Missile target: " + str(self.dloc) + " on the 1D scale")
+       print("Missile still flying: " + str(self.flying))
+       print('')
