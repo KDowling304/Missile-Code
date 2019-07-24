@@ -58,9 +58,24 @@ class Ship():
             missile.moveMissile(self.timeStep)
     
     
-    #def findTargets(self, otherShip):
+    def findShipTargets(self, otherShip):
         #if ship is in range, has it been shot at?, decide to shoot again or not
-        #if abs(otherShip.loc - self.loc) <= self.missileRange:
+        if (abs(otherShip.loc - self.loc) <= self.missileRange):
+            for missile in self.offensiveMissileList:
+                shotAt = False
+                #only need to check if flying because simulation ends when a ship is hit
+                #therefore either the offensive missile was unsuccessful already or hasn't been shot at
+                if(missile.flying == True):
+                    shotAt = True
+                    break
+                if(shotAt == True):
+                    
+                else:
+                    
+    def findMissileTargets(self, otherShip):
+                    
+                    
+                    
             
         
             

@@ -41,18 +41,7 @@ if __name__ == "__main__":
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][0], timeStep, sheet1['Missile Range (NM)'][1])
     blueShip.printShip()
     redShip.printShip()
-    
-    '''#Missiles Lists
-    #initialize empty lists with size of arsenals
-    #list of offensive missiles fired by blueShip
-    blueOffensiveMissiles = [None] * blueShip.oml
-    #list of defensive missiles fired by blueShip
-    blueDefensiveMissiles = [None] * blueShip.dml
-    #list of offensive missiles fired by redShip
-    redOffensiveMissiles = [None] * redShip.oml
-    #list of defensive missiles fired by redShip
-    redDefensiveMissiles = [None] * redShip.dml'''
-    
+      
 
     #Decision variables that determine scouting effectiveness but also have cost
     satellite = False #not communicating with satellite
