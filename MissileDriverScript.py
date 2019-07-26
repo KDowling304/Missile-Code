@@ -35,10 +35,14 @@ if __name__ == "__main__":
     #Ships
     blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0], 
-                sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], timeStep, sheet1['Missile Range (NM)'][0])
+                sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
+                timeStep, sheet1['Missile Range (NM)'][0], 
+                sheet1['Defensive Missile Success Probability'][0])
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
-                sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][0], timeStep, sheet1['Missile Range (NM)'][1])
+                sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
+                timeStep, sheet1['Missile Range (NM)'][1],
+                sheet1['Defensive Missile Success Probability'][1])
     blueShip.printShip()
     redShip.printShip()
       
@@ -53,6 +57,15 @@ if __name__ == "__main__":
    
     #Weather affects scouting effectiveness
     goodWeather = False #bad weather (True is good weather)
+    
+    #Run Simulation
+    simulationTime = 0 #in minutes
+    #simulation ends when certain time passes, both ships out of ammo, or either ship is hit
+    while(simulationTime <= 1):
+        
+        
+    
+    
     
     
     
