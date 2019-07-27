@@ -43,8 +43,9 @@ if __name__ == "__main__":
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Missile Range (NM)'][1],
                 sheet1['Defensive Missile Success Probability'][1])
-    blueShip.printShip()
     redShip.printShip()
+    blueShip.printShip()
+    
       
 
     #Decision variables that determine scouting effectiveness but also have cost
@@ -61,8 +62,19 @@ if __name__ == "__main__":
     #Run Simulation
     simulationTime = 0 #in minutes
     #simulation ends when certain time passes, both ships out of ammo, or either ship is hit
-    while(simulationTime <= 1):
-        
+    while(simulationTime <= 13):
+        redShip.findShipTargets(blueShip)
+        redShip.findMissileTargets(blueShip)
+        blueShip.findShipTargets(redShip)
+        blueShip.findMissileTargets(redShip)
+        redShip.moveAllMissiles()
+        blueShip.moveAllMissiles()
+        print("Time Elapsed: " + str(simulationTime))
+        print('')
+        redShip.printShip()
+        blueShip.printShip()
+        print('')
+        simulationTime = simulationTime + 0.25
         
     
     

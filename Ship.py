@@ -32,13 +32,15 @@ class Ship():
         #Missiles Lists
         #initialize empty lists with size of arsenals
         #list of offensive missiles fired by particular ship
-        self.offensiveMissileList = [None] * self.offensiveMissileTotal
+        '''self.offensiveMissileList = [None] * self.offensiveMissileTotal
         for missile in self.offensiveMissileList:
-            missile = OffensiveMissile(loc, None, missileSpeed)
+            missile = OffensiveMissile(loc, None, missileSpeed)'''
+        self.offensiveMissileList = [OffensiveMissile(loc, None, missileSpeed) for i in range(self.offensiveMissileTotal)]
         #list of defensive missiles fired by particular ship
-        self.defensiveMissileList = [None] * self.defensiveMissileTotal
+        '''self.defensiveMissileList = [None] * self.defensiveMissileTotal
         for missile in self.defensiveMissileList:
-            missile = DefensiveMissile(loc, None, missileSpeed)
+            missile = DefensiveMissile(loc, None, missileSpeed)'''
+        self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed) for i in range(self.defensiveMissileTotal)]
         #defensive missile success probability
         self.defHitProb = defHitProb
             
@@ -92,10 +94,11 @@ class Ship():
             if(incomingMissile.flying and (abs(incomingMissile.loc - self.loc) <= 2 * self.missileRange)):
                 for defensiveMissile in self.defensiveMissileList:
                     if(defensiveMissile.flying):
-                        if(incomingMissile == defensiveMissile):
+                        if(incomingMissile == defensiveMissile.target):
                             shootCount = shootCount + 1
                 if(shootCount < int(1/self.defHitProb)):
                     self.launchDefensiveMissile(incomingMissile)
+                    #print(shootCount)
                     
     def launchDefensiveMissile(self, targetMissile):
         self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
