@@ -10,7 +10,7 @@ from DefensiveMissile import DefensiveMissile
 
 class Ship():
     def __init__(self, shipName, loc, offensiveMissileTotal, defensiveMissileTotal, 
-                 shipSpeed, missileSpeed, timeStep, missileRange, defHitProb):
+                 shipSpeed, missileSpeed, timeStep, missileRange, offHitProb, defHitProb):
         self.name = shipName
         self.hit = False #ship hit by missile
         #best known location of destroyer in 1D scale (to compare to other ship)
@@ -29,21 +29,17 @@ class Ship():
         self.timeStep = timeStep
         #range of ship's missiles
         self.missileRange = missileRange
+        #offensive missile success probability
+        self.offHitProb = offHitProb
+        #defensive missile success probability
+        self.defHitProb = defHitProb
         #Missiles Lists
         #initialize empty lists with size of arsenals
         #list of offensive missiles fired by particular ship
-        '''self.offensiveMissileList = [None] * self.offensiveMissileTotal
-        for missile in self.offensiveMissileList:
-            missile = OffensiveMissile(loc, None, missileSpeed)'''
-        self.offensiveMissileList = [OffensiveMissile(loc, None, missileSpeed) for i in range(self.offensiveMissileTotal)]
+        self.offensiveMissileList = [OffensiveMissile(loc, None, missileSpeed, offHitProb) for i in range(self.offensiveMissileTotal)]
         #list of defensive missiles fired by particular ship
-        '''self.defensiveMissileList = [None] * self.defensiveMissileTotal
-        for missile in self.defensiveMissileList:
-            missile = DefensiveMissile(loc, None, missileSpeed)'''
-        self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed) for i in range(self.defensiveMissileTotal)]
-        #defensive missile success probability
-        self.defHitProb = defHitProb
-            
+        self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed, defHitProb) for i in range(self.defensiveMissileTotal)]
+
    
     #print current information about instance of Ship
     def printShip(self):
@@ -103,6 +99,19 @@ class Ship():
     def launchDefensiveMissile(self, targetMissile):
         self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
         self.dmf = self.dmf + 1
+        
+    def checkHitTargets(self):
+        for defensiveMissile in self.defensiveMissileList:
+            defensiveMissile.checkHitTarget()
+        for offensiveMissile in self.offensiveMissileList:
+            offensiveMissile.checkHitTarget()
+            
+    def outOfMissiles(self):
+        if(self.offensiveMissileTotal - self.omf <= 0 and self.defensiveMissileTotal - self.dmf <= 0):
+            return True
+        else:
+            return False
+            
                             
         
         

@@ -6,8 +6,10 @@ Created on Mon Jul 15 13:58:51 2019
 @author: karadowling
 """
 
+import random
+
 class DefensiveMissile():
-   def __init__(self, loc, target, missileSpeed):
+   def __init__(self, loc, target, missileSpeed, defHitProb):
        self.loc = loc #location of missile on 1D scale
        self.target = target #target missile
        #is the missile flying
@@ -17,6 +19,8 @@ class DefensiveMissile():
        self.missileSpeed = missileSpeed
        #direction of missile flight
        self.directionalVelocity = None
+       #probability of success of missile when reached target
+       self.defHitProb = defHitProb
        
    #moves particular missile the specified distance per timeStep
    def moveMissile(self, timeStep):
@@ -36,6 +40,16 @@ class DefensiveMissile():
    def launchMissile(self, target):
        self.setTarget(target)
        self.setFlyingStatus(True)
+   
+   #checks if the missile hit its target each iteration
+   def checkHitTarget(self):
+       if(self.flying):
+           currentDirectionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
+           if(self.directionalVelocity/currentDirectionalVelocity == -1):
+               self.setFlyingStatus(False)
+               if(random.random() <= self.defHitProb):
+                   self.target.setFlyingStatus(True)             
+     
 
   #print current information about instance of Ship
    def printMissile(self):

@@ -37,11 +37,13 @@ if __name__ == "__main__":
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0], 
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Missile Range (NM)'][0], 
+                sheet1['Offensive Missile Success Probability'][0],
                 sheet1['Defensive Missile Success Probability'][0])
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
-                timeStep, sheet1['Missile Range (NM)'][1],
+                timeStep, sheet1['Missile Range (NM)'][1], 
+                sheet1['Offensive Missile Success Probability'][1],
                 sheet1['Defensive Missile Success Probability'][1])
     redShip.printShip()
     blueShip.printShip()
@@ -62,11 +64,17 @@ if __name__ == "__main__":
     #Run Simulation
     simulationTime = 0 #in minutes
     #simulation ends when certain time passes, both ships out of ammo, or either ship is hit
-    while(simulationTime <= 13):
+    while(simulationTime <= 60):
+        if(redShip.hit or blueShip.hit):
+            break
+        if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+            break
         redShip.findShipTargets(blueShip)
         redShip.findMissileTargets(blueShip)
         blueShip.findShipTargets(redShip)
         blueShip.findMissileTargets(redShip)
+        redShip.checkHitTargets()
+        blueShip.checkHitTargets()
         redShip.moveAllMissiles()
         blueShip.moveAllMissiles()
         print("Time Elapsed: " + str(simulationTime))
