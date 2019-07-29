@@ -11,6 +11,7 @@ from OffensiveMissile import OffensiveMissile
 from DefensiveMissile import DefensiveMissile
 
 class Ship():
+    
     #initialize Ship object
     def __init__(self, shipName, loc, offensiveMissileTotal, defensiveMissileTotal, 
                  shipSpeed, missileSpeed, timeStep, missileRange, offHitProb, defHitProb):

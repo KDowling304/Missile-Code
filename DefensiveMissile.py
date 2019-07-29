@@ -11,6 +11,8 @@ Defensive Missile Class for each defensive missile for both Red and Blue Ships
 import random
 
 class DefensiveMissile():
+    
+   #initialize a single Defensive Missile 
    def __init__(self, loc, target, missileSpeed, defHitProb):
        self.loc = loc #location of missile on 1D scale
        self.target = target #target missile
@@ -55,7 +57,7 @@ class DefensiveMissile():
                    self.target.setFlyingStatus(True)             
      
 
-  #print current information about instance of Ship
+  #print current information about instance of a Defensive Missile
    def printMissile(self):
        print("Current location of missile: " + str(self.loc) + " on the 1D scale")
        print("Missile target: " + str(self.dloc) + " on the 1D scale")

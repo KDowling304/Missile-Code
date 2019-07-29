@@ -11,6 +11,7 @@ import random
 
 class OffensiveMissile():
     
+    #initialize a single offensive missile
     def __init__(self, loc, target, missileSpeed, offHitProb):
         self.loc = loc #location of missile on 1D scale
         self.target = target #target ship (Red Ship or Blue Ship)
@@ -23,8 +24,7 @@ class OffensiveMissile():
         self.directionalVelocity = None
         #probability of success of missile when reached target
         self.offHitProb = offHitProb
-
-        
+   
     #moves particular missile the specified distance per timeStep
     def moveMissile(self, timeStep):
         if(self.flying == True):
@@ -50,12 +50,15 @@ class OffensiveMissile():
     def checkHitTarget(self):
         if(self.flying):
             currentDirectionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
+            #if the missile has passed or is at its target ship in the current timeStep
             if(self.directionalVelocity/currentDirectionalVelocity == -1):
-                self.setFlyingStatus(False)
+                self.setFlyingStatus(False) #missile no longer flying
+                #use random number generator to determine 
+                #if the missile was a success at its target
                 if(random.random() <= self.offHitProb):
                     self.target.hit = True               
      
-    #print current information about instance of Ship
+    #print current information about instance of an Offensive Missile
     def printMissile(self):
         print("Current location of missile: " + str(self.loc) + " on the 1D scale")
         print("Missile target: " + str(self.dloc) + " on the 1D scale")
