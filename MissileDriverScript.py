@@ -63,6 +63,13 @@ if __name__ == "__main__":
     #Weather affects scouting effectiveness
     goodWeather = False #bad weather (True is good weather)
     
+    #Create Plot List for Missile Count Over Time
+    simulationTimeArray = [] #
+    RedNumberOffensiveMissiles = []
+    RedNumberDefensiveMissiles = []
+    BlueNumberOffensiveMissiles = []
+    BlueNumberDefensiveMissiles = []
+    
     #Run Missile Simulation
     #keeps track of iterations that are representative of minutes
     simulationTime = 0 #in minutes
@@ -83,9 +90,6 @@ if __name__ == "__main__":
         #check if any flying missiles have hit their targets
         redShip.checkHitTargets()
         blueShip.checkHitTargets()
-        #move all flying missiles forward to next state according to time and speed
-        redShip.moveAllMissiles()
-        blueShip.moveAllMissiles()
         #print the time elapsed in the simulation
         print("Time Elapsed: " + str(simulationTime))
         print('')
@@ -93,8 +97,32 @@ if __name__ == "__main__":
         redShip.printShip()
         blueShip.printShip()
         print('')
+        simulationTimeArray.append(simulationTime)
+        RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal - redShip.omf)
+        RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal - redShip.dmf)
+        BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal - blueShip.omf)
+        BlueNumberDefensiveMissiles.append(blueShip.defensiveMissileTotal - blueShip.dmf)
+        #move all flying missiles forward to next state according to time and speed
+        redShip.moveAllMissiles()
+        blueShip.moveAllMissiles()
         #increment the simulation time
         simulationTime = simulationTime + 0.25
+        
+    plt.plot(simulationTimeArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
+    plt.plot(simulationTimeArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
+    plt.xlabel('Simulation Time')
+    plt.ylabel('Offensive Missiles Left')
+    plt.title('Offensive Missiles Left in Ships\' Arsenals over Time')
+    plt.savefig('OffensiveMissilesOverTime.png', dpi=600)
+    plt.show()
+    plt.plot(simulationTimeArray, RedNumberDefensiveMissiles, color='red')
+    plt.plot(simulationTimeArray, BlueNumberDefensiveMissiles, color='blue')
+    plt.xlabel('Simulation Time')
+    plt.ylabel('Defensive Missiles Left')
+    plt.title('Defensive Missiles Left in Ships\' Arsenals over Time')
+    plt.savefig('DefensiveMissilesOverTime.png', dpi=600)
+    plt.show()
+    
         
     
     
