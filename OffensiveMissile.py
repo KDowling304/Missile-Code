@@ -24,6 +24,13 @@ class OffensiveMissile():
         self.directionalVelocity = None
         #probability of success of missile when reached target
         self.offHitProb = offHitProb
+        
+    #print current information about instance of an Offensive Missile
+    def printMissile(self):
+        print("Current location of missile: " + str(self.loc) + " on the 1D scale")
+        print("Missile target: " + str(self.dloc) + " on the 1D scale")
+        print("Missile still flying: " + str(self.flying))
+        print('')
    
     #moves particular missile the specified distance per timeStep
     def moveMissile(self, timeStep):
@@ -58,10 +65,5 @@ class OffensiveMissile():
                 if(random.random() <= self.offHitProb):
                     self.target.hit = True               
      
-    #print current information about instance of an Offensive Missile
-    def printMissile(self):
-        print("Current location of missile: " + str(self.loc) + " on the 1D scale")
-        print("Missile target: " + str(self.dloc) + " on the 1D scale")
-        print("Missile still flying: " + str(self.flying))
-        print('')
+
     
