@@ -6,6 +6,10 @@ Created on Thu Jul 11 11:14:19 2019
 @author: karadowling
 code adapted from ORF 411 AssetSelling problem code found at link below
 https://github.com/wbpowell328/stochastic-optimization/tree/master/AssetSelling
+
+This is a simulation of a two-agent surface ship missile engagement.  
+The simulation starts with the Red Ship firing at the Blue Ship and ends when 
+either ship is hit by a missle or both ships are out of missiles.
 """
 
 from collections import namedtuple
@@ -23,7 +27,7 @@ if __name__ == "__main__":
     
     #state variables
 
-    
+
     #time step for each iteration of "game" in minuntes
     timeStep = sheet2['Time Step (minutes)'][0]
     print("Time Step: " + str(timeStep) + " minutes")

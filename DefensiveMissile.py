@@ -47,7 +47,9 @@ class DefensiveMissile():
            currentDirectionalVelocity = (self.target.loc - self.loc)/abs(self.target.loc - self.loc) 
            if(self.directionalVelocity/currentDirectionalVelocity == -1):
                self.setFlyingStatus(False)
-               if(random.random() <= self.defHitProb):
+               randomHit = random.random()
+               print(randomHit)
+               if(randomHit <= self.defHitProb):
                    self.target.setFlyingStatus(True)             
      
 
