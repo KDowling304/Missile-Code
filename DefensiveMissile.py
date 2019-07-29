@@ -4,6 +4,8 @@
 Created on Mon Jul 15 13:58:51 2019
 
 @author: karadowling
+
+Defensive Missile Class for each defensive missile for both Red and Blue Ships
 """
 
 import random
@@ -48,7 +50,7 @@ class DefensiveMissile():
            if(self.directionalVelocity/currentDirectionalVelocity == -1):
                self.setFlyingStatus(False)
                randomHit = random.random()
-               print(randomHit)
+               #print(randomHit)
                if(randomHit <= self.defHitProb):
                    self.target.setFlyingStatus(True)             
      

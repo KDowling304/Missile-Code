@@ -4,6 +4,8 @@
 Created on Mon Jul 15 13:58:51 2019
 
 @author: karadowling
+
+Offensive Missile Class for each offensive missile for both Red and Blue Ships
 """
 import random
 

@@ -4,6 +4,8 @@
 Created on Mon Jul 15 08:43:13 2019
 
 @author: karadowling
+
+Ship Class that holds all information about each Ship in the simulation
 """
 from OffensiveMissile import OffensiveMissile
 from DefensiveMissile import DefensiveMissile
