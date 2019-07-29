@@ -82,8 +82,9 @@ class Ship():
                 
     #called by findShipTargets when wanting to launch an offensive missile            
     def launchOffensiveMissile(self, otherShip):
-        self.offensiveMissileList[self.omf].launchMissile(otherShip)
-        self.omf = self.omf + 1
+        if (self.offensiveMissileTotal - self.omf > 0):
+            self.offensiveMissileList[self.omf].launchMissile(otherShip)
+            self.omf = self.omf + 1
                 
     #determine if should shoot at incoming missiles (if there are any)                
     def findMissileTargets(self, otherShip):       
@@ -101,15 +102,17 @@ class Ship():
      
     #called by findMissileTargets when wanting to launch a defensive missile               
     def launchDefensiveMissile(self, targetMissile):
-        self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
-        self.dmf = self.dmf + 1
+        if(self.defensiveMissileTotal - self.dmf > 0):
+            self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
+            self.dmf = self.dmf + 1
     
     #check all missiles to determine if they've hit their targets
     def checkHitTargets(self):
-        for defensiveMissile in self.defensiveMissileList:
-            defensiveMissile.checkHitTarget()
         for offensiveMissile in self.offensiveMissileList:
             offensiveMissile.checkHitTarget()
+        for defensiveMissile in self.defensiveMissileList:
+            defensiveMissile.checkHitTarget()
+        
     
     #determine if the ship is out of all missiles
     #returns True if no missiles left, false otherwise        

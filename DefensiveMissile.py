@@ -66,5 +66,5 @@ class DefensiveMissile():
                randomHit = random.random()
                #print(randomHit)
                if(randomHit <= self.defHitProb):
-                   self.target.setFlyingStatus(True)             
+                   self.target.setFlyingStatus(False)             
      
