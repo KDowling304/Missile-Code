@@ -82,6 +82,7 @@ class Ship():
                 
     #called by findShipTargets when wanting to launch an offensive missile            
     def launchOffensiveMissile(self, otherShip):
+        #can only launch missile if there are missiles left to be fired
         if (self.offensiveMissileTotal - self.omf > 0):
             self.offensiveMissileList[self.omf].launchMissile(otherShip)
             self.omf = self.omf + 1
@@ -102,6 +103,7 @@ class Ship():
      
     #called by findMissileTargets when wanting to launch a defensive missile               
     def launchDefensiveMissile(self, targetMissile):
+        #can only launch missile if there are missiles left to be fired
         if(self.defensiveMissileTotal - self.dmf > 0):
             self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
             self.dmf = self.dmf + 1

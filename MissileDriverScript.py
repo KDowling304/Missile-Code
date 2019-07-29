@@ -67,7 +67,7 @@ if __name__ == "__main__":
     #keeps track of iterations that are representative of minutes
     simulationTime = 0 #in minutes
     #simulation ends when certain time passes to ensure no infinite loop can occur
-    while(simulationTime <= 200):
+    while(simulationTime <= 500):
         #checking for exit conditions
         #stop simulation if either ship is hit
         if(redShip.hit or blueShip.hit):
