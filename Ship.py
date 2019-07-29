@@ -99,7 +99,7 @@ class Ship():
     def launchDefensiveMissile(self, targetMissile):
         self.defensiveMissileList[self.dmf].launchMissile(targetMissile)
         self.dmf = self.dmf + 1
-        
+     
     def checkHitTargets(self):
         for defensiveMissile in self.defensiveMissileList:
             defensiveMissile.checkHitTarget()
@@ -112,11 +112,3 @@ class Ship():
         else:
             return False
             
-                            
-        
-        
-            
-    
-    
-#test = Ship("Test Ship", 0, 20, 60)
-#test.printShip()

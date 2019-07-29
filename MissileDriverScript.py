@@ -15,9 +15,6 @@ import matplotlib.pyplot as plt
 from copy import copy
 import math
 from Ship import Ship
-from OffensiveMissile import OffensiveMissile
-from DefensiveMissile import DefensiveMissile
-
 
 if __name__ == "__main__":
     #read in policy parameters from an Excel spreadsheet, "missile_policy_parameters.xlsx"
@@ -32,7 +29,7 @@ if __name__ == "__main__":
     print("Time Step: " + str(timeStep) + " minutes")
     print('')
     
-    #Ships
+    #Initialize Ships
     blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0], 
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
@@ -45,11 +42,12 @@ if __name__ == "__main__":
                 timeStep, sheet1['Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
                 sheet1['Defensive Missile Success Probability'][1])
+    #Print Initialized Ships
     redShip.printShip()
     blueShip.printShip()
     
       
-
+    #not incorporating these yet
     #Decision variables that determine scouting effectiveness but also have cost
     satellite = False #not communicating with satellite
     radar = False #active radar turned off
@@ -61,27 +59,37 @@ if __name__ == "__main__":
     #Weather affects scouting effectiveness
     goodWeather = False #bad weather (True is good weather)
     
-    #Run Simulation
+    #Run Missile Simulation
+    #keeps track of iterations that are representative of minutes
     simulationTime = 0 #in minutes
-    #simulation ends when certain time passes, both ships out of ammo, or either ship is hit
-    while(simulationTime <= 60):
+    #simulation ends when certain time passes to ensure no infinite loop can occur
+    while(simulationTime <= 200):
+        #checking for exit conditions
+        #stop simulation if either ship is hit
         if(redShip.hit or blueShip.hit):
             break
+        #stop simulation if both ships are out of ammunition(missiles)
         if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
-            break
+            break 
+        #determine if there are target ships or missiles for the ships
         redShip.findShipTargets(blueShip)
         redShip.findMissileTargets(blueShip)
         blueShip.findShipTargets(redShip)
         blueShip.findMissileTargets(redShip)
+        #check if any flying missiles have hit their targets
         redShip.checkHitTargets()
         blueShip.checkHitTargets()
+        #move all flying missiles forward to next state according to time and speed
         redShip.moveAllMissiles()
         blueShip.moveAllMissiles()
+        #print the time elapsed in the simulation
         print("Time Elapsed: " + str(simulationTime))
         print('')
+        #print the ship summaries
         redShip.printShip()
         blueShip.printShip()
         print('')
+        #increment the simulation time
         simulationTime = simulationTime + 0.25
         
     
