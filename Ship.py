@@ -64,9 +64,11 @@ class Ship():
     def moveAllMissiles(self):
         for missile in self.offensiveMissileList:
             missile.moveMissile(self.timeStep)
+            #animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " offensive " + str(missile.checkHitTarget()) + "\n")
         for missile in self.defensiveMissileList:
             missile.moveMissile(self.timeStep)
-    
+            #animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " defensive " + str(missile.checkHitTarget()) + "\n")
+            
     #determine if should shoot at opposing ship
     def findShipTargets(self, otherShip):
         #if ship is in range, has it been shot at?, decide to shoot again or not
@@ -109,11 +111,14 @@ class Ship():
             self.dmf = self.dmf + 1
     
     #check all missiles to determine if they've hit their targets
-    def checkHitTargets(self):
-        for offensiveMissile in self.offensiveMissileList:
-            offensiveMissile.checkHitTarget()
-        for defensiveMissile in self.defensiveMissileList:
-            defensiveMissile.checkHitTarget()
+    def checkHitTargets(self, animationFile, simulationTime):
+        for missile in self.offensiveMissileList:
+            #missile.checkHitTarget()
+            animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " offensive " + str(missile.checkHitTarget()) + "\n")
+        for missile in self.defensiveMissileList:
+            #missile.checkHitTarget()
+            animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " defensive " + str(missile.checkHitTarget()) + "\n")
+            
         
     
     #determine if the ship is out of all missiles

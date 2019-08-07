@@ -63,7 +63,9 @@ class OffensiveMissile():
                 #use random number generator to determine 
                 #if the missile was a success at its target
                 if(random.random() <= self.offHitProb):
-                    self.target.hit = True               
+                    self.target.hit = True
+                    return True
+        return False
      
 
     

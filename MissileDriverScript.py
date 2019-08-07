@@ -16,6 +16,7 @@ from collections import namedtuple
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from copy import copy
 import math
 from Ship import Ship
@@ -74,6 +75,7 @@ if __name__ == "__main__":
     #keeps track of iterations that are representative of minutes
     simulationTime = 0 #in minutes
     #simulation ends when certain time passes to ensure no infinite loop can occur
+    animationFile = open("animationFile.txt", "w")
     while(simulationTime <= 500):
         #checking for exit conditions
         #stop simulation if either ship is hit
@@ -88,8 +90,8 @@ if __name__ == "__main__":
         blueShip.findShipTargets(redShip)
         blueShip.findMissileTargets(redShip)
         #check if any flying missiles have hit their targets
-        redShip.checkHitTargets()
-        blueShip.checkHitTargets()
+        redShip.checkHitTargets(animationFile, simulationTime)
+        blueShip.checkHitTargets(animationFile, simulationTime)
         #print the time elapsed in the simulation
         print("Time Elapsed: " + str(simulationTime))
         print('')
@@ -107,11 +109,13 @@ if __name__ == "__main__":
         blueShip.moveAllMissiles()
         #increment the simulation time
         simulationTime = simulationTime + 0.25
-        
+    animationFile.close()
+ 
     plt.plot(simulationTimeArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
     plt.plot(simulationTimeArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
     plt.legend()
-    #plt.ylim((0, max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal)))
+    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
+    plt.axes
     plt.xlabel('Simulation Time (minutes)')
     plt.ylabel('Offensive Missiles Left')
     plt.title('Offensive Missiles Left in Ships\' Arsenals over Time')
