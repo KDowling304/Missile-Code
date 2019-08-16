@@ -14,7 +14,8 @@ class Ship():
     
     #initialize Ship object
     def __init__(self, shipName, loc, offensiveMissileTotal, defensiveMissileTotal, 
-                 shipSpeed, missileSpeed, timeStep, missileRange, offHitProb, defHitProb):
+                 shipSpeed, missileSpeed, timeStep, missileRange, offHitProb, 
+                 defHitProbP1, defHitProbP2, defHitProbP3):
         #name of ship
         self.name = shipName
         self.hit = False #whether ship hit by missile
@@ -36,14 +37,20 @@ class Ship():
         self.missileRange = missileRange
         #offensive missile success probability
         self.offHitProb = offHitProb
-        #defensive missile success probability
-        self.defHitProb = defHitProb
+        #probability of success of missile when reached target 
+        #depending on target offensive missile's phase of flight
+        #Phase 1 (300-100 NM from ship)
+        self.defHitProbP1 = defHitProbP1
+        #Phase 2 (100-20 NM from ship)
+        self.defHitProbP2 = defHitProbP2
+        #Phase 3 (20-0 NM from ship)
+        self.defHitProbP3 = defHitProbP3
         #Missiles Lists
         #initialize empty lists with size of arsenals
         #list of offensive missiles fired by particular ship
         self.offensiveMissileList = [OffensiveMissile(loc, None, missileSpeed, offHitProb) for i in range(self.offensiveMissileTotal)]
         #list of defensive missiles fired by particular ship
-        self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed, defHitProb) for i in range(self.defensiveMissileTotal)]
+        self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed, defHitProbP1, defHitProbP2, defHitProbP3) for i in range(self.defensiveMissileTotal)]
 
    
     #print current information about instance of Ship
@@ -63,12 +70,18 @@ class Ship():
     #calls function in missile classes to move each missile that is flying
     def moveAllMissiles(self):
         for missile in self.offensiveMissileList:
-            missile.moveMissile(self.timeStep)
-            #animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " offensive " + str(missile.checkHitTarget()) + "\n")
+            missile.moveMissile(self.timeStep, self.loc)
         for missile in self.defensiveMissileList:
-            missile.moveMissile(self.timeStep)
-            #animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " defensive " + str(missile.checkHitTarget()) + "\n")
-            
+            missile.moveMissile(self.timeStep, self.loc)
+    
+    #determine if ships should be moved
+    #current policy is to move ships closer if they are out of range and do nothing otherwise
+    def moveShip(self, otherShip, animationFile, simulationTime):
+        if (abs(self.loc - otherShip.loc) > self.missileRange):
+            directionalVelocity = (otherShip.loc - self.loc)/abs(otherShip.loc - self.loc) 
+            self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep
+        animationFile.write(str(simulationTime) + " " + str(self.loc) + " " + self.name + " ship " + str(False) + "\n")
+           
     #determine if should shoot at opposing ship
     def findShipTargets(self, otherShip):
         #if ship is in range, has it been shot at?, decide to shoot again or not
@@ -99,7 +112,15 @@ class Ship():
                     if(defensiveMissile.flying):
                         if(incomingMissile == defensiveMissile.target):
                             shootCount = shootCount + 1
-                if(shootCount < int(1/self.defHitProb)):
+                currentHitProb = 0
+                if(abs(incomingMissile.loc - incomingMissile.target.loc) < 20):
+                    currentHitProb = self.defHitProbP3
+                elif(abs(incomingMissile.loc - incomingMissile.target.loc) < 100):
+                   currentHitProb = self.defHitProbP2
+                else:
+                    currentHitProb = self.defHitProbP1
+                
+                if(shootCount < int(1/currentHitProb)):
                     self.launchDefensiveMissile(incomingMissile)
                     #print(shootCount)
      
@@ -117,9 +138,7 @@ class Ship():
             animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " offensive " + str(missile.checkHitTarget()) + "\n")
         for missile in self.defensiveMissileList:
             #missile.checkHitTarget()
-            animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " defensive " + str(missile.checkHitTarget()) + "\n")
-            
-        
+            animationFile.write(str(simulationTime) + " " + str(missile.loc) + " " + self.name + " defensive " + str(missile.checkHitTarget()) + "\n")     
     
     #determine if the ship is out of all missiles
     #returns True if no missiles left, false otherwise        

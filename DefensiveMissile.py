@@ -13,7 +13,7 @@ import random
 class DefensiveMissile():
     
    #initialize a single Defensive Missile 
-   def __init__(self, loc, target, missileSpeed, defHitProb):
+   def __init__(self, loc, target, missileSpeed, defHitProbP1, defHitProbP2, defHitProbP3):
        self.loc = loc #location of missile on 1D scale
        self.target = target #target missile
        #is the missile flying
@@ -23,8 +23,14 @@ class DefensiveMissile():
        self.missileSpeed = missileSpeed
        #direction of missile flight
        self.directionalVelocity = None
-       #probability of success of missile when reached target
-       self.defHitProb = defHitProb
+       #probability of success of missile when reached target 
+       #depending on target offensive missile's phase of flight
+       #Phase 1 (300-100 NM from ship)
+       self.defHitProbP1 = defHitProbP1
+       #Phase 2 (100-20 NM from ship)
+       self.defHitProbP2 = defHitProbP2
+       #Phase 3 (20-0 NM from ship)
+       self.defHitProbP3 = defHitProbP3
        
    #print current information about instance of a Defensive Missile
    def printMissile(self):
@@ -34,9 +40,11 @@ class DefensiveMissile():
        print('')
        
    #moves particular missile the specified distance per timeStep
-   def moveMissile(self, timeStep):
+   def moveMissile(self, timeStep, shipLoc):
        if(self.flying == True):
            self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * timeStep
+       if(self.flying == False and self.target == None):
+            self.loc = shipLoc
    
    #updates target parameter of the missile
    def setTarget(self, target):
@@ -65,7 +73,17 @@ class DefensiveMissile():
                #if the missile was a success at its target
                randomHit = random.random()
                #print(randomHit)
-               if(randomHit <= self.defHitProb):
+               #determine which probability to use for effectiveness of defensive missile
+               #determined based on how close the offensive missile is to its target
+               #offensive missile changes flight path based off this
+               currentHitProb = 0
+               if(abs(self.target.loc - self.target.target.loc) < 20):
+                   currentHitProb = self.defHitProbP3
+               elif(abs(self.target.loc - self.target.target.loc) < 100):
+                   currentHitProb = self.defHitProbP2
+               else:
+                   currentHitProb = self.defHitProbP1
+               if(self.target.flying and randomHit <= currentHitProb):
                    self.target.setFlyingStatus(False)  
                    return True
        return False

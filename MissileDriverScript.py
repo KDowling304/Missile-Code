@@ -12,13 +12,13 @@ The simulation starts with the Red Ship firing at the Blue Ship and ends when
 either ship is hit by a missle or both ships are out of missiles.
 """
 
-from collections import namedtuple
+#from collections import namedtuple
 import pandas as pd
-import numpy as np
+#import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
-from copy import copy
-import math
+#from matplotlib.ticker import MaxNLocator
+#from copy import copy
+#import math
 from Ship import Ship
 
 if __name__ == "__main__":
@@ -40,13 +40,17 @@ if __name__ == "__main__":
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Missile Range (NM)'][0], 
                 sheet1['Offensive Missile Success Probability'][0],
-                sheet1['Defensive Missile Success Probability'][0])
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 300-100 NM from its target - phase 1)'][0],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 2)'][0],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-0 NM from its target - phase 3)'][0])
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
-                sheet1['Defensive Missile Success Probability'][1])
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 300-100 NM from its target - phase 1)'][1],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 2)'][1],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-0 NM from its target - phase 3)'][1])
     #Print Initialized Ships
     redShip.printShip()
     blueShip.printShip()
@@ -84,6 +88,9 @@ if __name__ == "__main__":
         #stop simulation if both ships are out of ammunition(missiles)
         if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
             break 
+        #move ships if they are out of range
+        redShip.moveShip(blueShip, animationFile, simulationTime)
+        blueShip.moveShip(redShip, animationFile, simulationTime)
         #determine if there are target ships or missiles for the ships
         redShip.findShipTargets(blueShip)
         redShip.findMissileTargets(blueShip)

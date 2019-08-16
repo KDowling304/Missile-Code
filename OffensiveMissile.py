@@ -33,9 +33,12 @@ class OffensiveMissile():
         print('')
    
     #moves particular missile the specified distance per timeStep
-    def moveMissile(self, timeStep):
+    def moveMissile(self, timeStep, shipLoc):
         if(self.flying == True):
             self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * timeStep
+        if(self.flying == False and self.target == None):
+            self.loc = shipLoc
+            
       
     #updates target parameter of the missile
     def setTarget(self, target):
