@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     #time step for each iteration of "game" in minuntes
     timeStep = sheet2['Time Step (minutes)'][0]
-    print("Time Step: " + str(timeStep) + " minutes")
+    print("Time step each iteration is " + str(timeStep) + " minutes")
     print('')
     
     #Initialize Ships
@@ -40,31 +40,31 @@ if __name__ == "__main__":
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Missile Range (NM)'][0], 
                 sheet1['Offensive Missile Success Probability'][0],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 300-100 NM from its target - phase 1)'][0],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 2)'][0],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-0 NM from its target - phase 3)'][0])
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 1)'][0],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][0],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][0],
+                sheet1['Satellite'][0], sheet1['Radar'][0], 
+                sheet1['Electronic Surveillance'][0], 
+                sheet1['Passive Sensors (Acoustic)'][0],
+                sheet1['UAV'][0], sheet1['USV'][0])
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 300-100 NM from its target - phase 1)'][1],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 2)'][1],
-                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-0 NM from its target - phase 3)'][1])
-    #Print Initialized Ships
-    redShip.printShip()
-    blueShip.printShip()
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 1)'][1],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][1],
+                sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][1],
+                sheet1['Satellite'][0], sheet1['Radar'][0], 
+                sheet1['Electronic Surveillance'][0], 
+                sheet1['Passive Sensors (Acoustic)'][0],
+                sheet1['UAV'][0], sheet1['USV'][0])
     
-      
-    #not incorporating these yet
-    #Decision variables that determine scouting effectiveness but also have cost
-    satellite = False #not communicating with satellite
-    radar = False #active radar turned off
-    electronicSurveillance = False #electronic surveillance equipment off
-    passiveSensors = False #passive acoustic sensors off
-    uav = False #Unmanned Aerial Vehicle (UAV) not deployed
-    usv = False #Unmanned Surface Vehicle (USV) not deployed
+    #Print Initialized Ships
+    #redShip.printShip()
+    #blueShip.printShip()
    
+    #not incorporated yet
     #Weather affects scouting effectiveness
     goodWeather = False #bad weather (True is good weather)
     
@@ -74,13 +74,18 @@ if __name__ == "__main__":
     RedNumberDefensiveMissiles = []
     BlueNumberOffensiveMissiles = []
     BlueNumberDefensiveMissiles = []
+    simulationTimeArray.append(0)
+    RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal)
+    RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal)
+    BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal)
+    BlueNumberDefensiveMissiles.append(blueShip.defensiveMissileTotal)
     
     #Run Missile Simulation
     #keeps track of iterations that are representative of minutes
-    simulationTime = 0 #in minutes
+    simulationTime = 0.25 #in minutes
     #simulation ends when certain time passes to ensure no infinite loop can occur
     animationFile = open("animationFile.txt", "w")
-    while(simulationTime <= 500):
+    while(simulationTime <= 1000):
         #checking for exit conditions
         #stop simulation if either ship is hit
         if(redShip.hit or blueShip.hit):

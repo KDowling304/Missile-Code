@@ -9,13 +9,15 @@ Ship Class that holds all information about each Ship in the simulation
 """
 from OffensiveMissile import OffensiveMissile
 from DefensiveMissile import DefensiveMissile
+import random
 
 class Ship():
     
     #initialize Ship object
     def __init__(self, shipName, loc, offensiveMissileTotal, defensiveMissileTotal, 
                  shipSpeed, missileSpeed, timeStep, missileRange, offHitProb, 
-                 defHitProbP1, defHitProbP2, defHitProbP3):
+                 defHitProbP1, defHitProbP2, defHitProbP3, satellite, radar,
+                 electronicSurveillance, passiveSensors, uav, usv):
         #name of ship
         self.name = shipName
         self.hit = False #whether ship hit by missile
@@ -51,8 +53,21 @@ class Ship():
         self.offensiveMissileList = [OffensiveMissile(loc, None, missileSpeed, offHitProb) for i in range(self.offensiveMissileTotal)]
         #list of defensive missiles fired by particular ship
         self.defensiveMissileList = [DefensiveMissile(loc, None, missileSpeed, defHitProbP1, defHitProbP2, defHitProbP3) for i in range(self.defensiveMissileTotal)]
+        #scouting variables
+        #each comment corresponds with true value
+        #communicating with satellite
+        self.satellite = bool(satellite)
+        #active radar on
+        self.radar = bool(radar)
+        #electronic surveillance equipment turned on
+        self.electronicSurveillance = bool(electronicSurveillance)
+        #passive acoustic sensors on
+        self.passiveSensors = bool(passiveSensors)
+        #Unmanned Aerial Vehicle (UAV) deployed
+        self.uav = bool(uav)
+        #Unmanned Surface Vehicle (USV) deployed
+        self.usv = bool(usv)
 
-   
     #print current information about instance of Ship
     def printShip(self):
         print(self.name + ":")
@@ -77,23 +92,77 @@ class Ship():
     #determine if ships should be moved
     #current policy is to move ships closer if they are out of range and do nothing otherwise
     def moveShip(self, otherShip, animationFile, simulationTime):
-        if (abs(self.loc - otherShip.loc) > self.missileRange):
+        '''if (abs(self.loc - otherShip.loc) > self.missileRange):
+            directionalVelocity = (otherShip.loc - self.loc)/abs(otherShip.loc - self.loc) 
+            self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep'''
+        #move until they get 5 NM from each other 
+        if (abs(self.loc - otherShip.loc) > 5):
             directionalVelocity = (otherShip.loc - self.loc)/abs(otherShip.loc - self.loc) 
             self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep
-        animationFile.write(str(simulationTime) + " " + str(self.loc) + " " + self.name + " ship " + str(False) + "\n")
+            animationFile.write(str(simulationTime) + " " + str(self.loc) + " " + self.name + " ship " + str(False) + "\n")
            
     #determine if should shoot at opposing ship
     def findShipTargets(self, otherShip):
-        #if ship is in range, has it been shot at?, decide to shoot again or not
-        if (abs(otherShip.loc - self.loc) <= self.missileRange):
-            shootCount = 0
-            for missile in self.offensiveMissileList:
-                #only need to check if flying because simulation ends when a ship is hit
-                #therefore either the offensive missile was unsuccessful already or hasn't been shot at
-                if(missile.flying == True):
-                    shootCount = shootCount + 1       
-            if(shootCount < 1):
-                self.launchOffensiveMissile(otherShip)
+        #distance between ships
+        shipDistance = abs(otherShip.loc - self.loc)
+        
+        #determine if ship has targeting data for other ship
+        targetingData = False
+        if(self.satellite):
+            targetingData = True
+        elif(shipDistance <= 100 and shipDistance > 40):
+            if(self.uav):
+                if(random.random() < .5):
+                    targetingData = True
+            if(self.uav):
+                if(random.random() < .2):
+                    targetingData = True
+        elif(shipDistance <= 40 and shipDistance > 30):
+            if(self.passiveSensors):
+                targetingData = True
+            if(self.uav):
+                if(random.random() < .5):
+                    targetingData = True
+            if(self.uav):
+                if(random.random() < .2):
+                    targetingData = True
+        elif(shipDistance <= 30 and shipDistance > 20):
+            if(self.electronicSurveillance and otherShip.radar):
+                targetingData = True
+            if(self.uav):
+                if(random.random() < .5):
+                    targetingData = True
+            if(self.uav):
+                if(random.random() < .2):
+                    targetingData = True     
+        elif(shipDistance <= 20):
+            if(self.radar):
+                targetingData = True
+            if(self.electronicSurveillance and otherShip.radar):
+                targetingData = True
+            if(self.uav):
+                if(random.random() < .5):
+                    targetingData = True
+            if(self.uav):
+                if(random.random() < .2):
+                    targetingData = True
+        
+        #if targeting data is present
+        #if ship is in range, has it been shot at?, decide to shoot again or not                     
+        #print(targetingData)
+        if(targetingData):
+            if (shipDistance <= self.missileRange):
+                shootCount = 0
+                for missile in self.offensiveMissileList:
+                    #only need to check if flying because simulation ends when a ship is hit
+                    #therefore either the offensive missile was unsuccessful already or hasn't been shot at
+                    if(missile.flying == True):
+                        shootCount = shootCount + 1       
+                if(shootCount < 2):
+                    self.launchOffensiveMissile(otherShip)
+  
+                            
+                
                 
     #called by findShipTargets when wanting to launch an offensive missile            
     def launchOffensiveMissile(self, otherShip):
@@ -107,17 +176,21 @@ class Ship():
         #go through all incoming offensive missiles
         for incomingMissile in otherShip.offensiveMissileList:
             shootCount = 0
-            if(incomingMissile.flying and (abs(incomingMissile.loc - self.loc) <= 2 * self.missileRange)):
+            if(incomingMissile.flying and (abs(incomingMissile.loc - self.loc) <= 100)):
                 for defensiveMissile in self.defensiveMissileList:
                     if(defensiveMissile.flying):
                         if(incomingMissile == defensiveMissile.target):
                             shootCount = shootCount + 1
                 currentHitProb = 0
-                if(abs(incomingMissile.loc - incomingMissile.target.loc) < 20):
+                #current distance between incoming missile and its target
+                incomingTargetDistance = abs(incomingMissile.loc - incomingMissile.target.loc)
+                if(incomingTargetDistance <= 1):
+                    currentHitProb = .01
+                elif(incomingTargetDistance <= 5 and incomingTargetDistance > 1):
                     currentHitProb = self.defHitProbP3
-                elif(abs(incomingMissile.loc - incomingMissile.target.loc) < 100):
+                elif(incomingTargetDistance <=20 and incomingTargetDistance > 5):
                    currentHitProb = self.defHitProbP2
-                else:
+                elif(incomingTargetDistance <=100 and incomingTargetDistance > 20):
                     currentHitProb = self.defHitProbP1
                 
                 if(shootCount < int(1/currentHitProb)):
@@ -143,7 +216,15 @@ class Ship():
     #determine if the ship is out of all missiles
     #returns True if no missiles left, false otherwise        
     def outOfMissiles(self):
+        #if all offensive missiles fired and are not currently flying
+        offenseFiredDown = True
+        for missile in self.offensiveMissileList:
+            if missile.target == None or (missile.target != None and missile.flying):
+                offenseFiredDown = False
+    
         if(self.offensiveMissileTotal - self.omf <= 0 and self.defensiveMissileTotal - self.dmf <= 0):
+            return True
+        elif(offenseFiredDown):
             return True
         else:
             return False
