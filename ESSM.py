@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 15 13:58:51 2019
+Created on Fri Aug 23 10:51:22 2019
 
 @author: karadowling
 
-Defensive Missile Class for each defensive missile for both Red and Blue Ships
+Extended NATO Sea Sparrow Class for both Red and Blue Ships
+ESSMs are a point defense system
+Used when incoming offensive missile is 3-5 NM from its target
+Shoot-Shoot doctrine 
 """
 
 import random
 
-class DefensiveMissile():
+class ESSM():
     
-   #initialize a single Defensive Missile 
-   def __init__(self, loc, target, missileSpeed, defHitProbP1, defHitProbP2, defHitProbP3):
+   #initialize a single ESSM
+   def __init__(self, loc, target, missileSpeed, essmHitProb):
        self.loc = loc #location of missile on 1D scale
        self.target = target #target missile
        #is the missile flying
@@ -23,14 +26,9 @@ class DefensiveMissile():
        self.missileSpeed = missileSpeed
        #direction of missile flight
        self.directionalVelocity = None
-       #probability of success of missile when reached target 
-       #depending on target offensive missile's phase of flight
-       #Phase 1 (100-20 NM from ship)
-       self.defHitProbP1 = defHitProbP1
-       #Phase 2 (20-5 NM from ship)
-       self.defHitProbP2 = defHitProbP2
-       #Phase 3 (5-0 NM from ship)
-       self.defHitProbP3 = defHitProbP3
+       #ESSM success probability
+       self.HitProb = essmHitProb
+
        
    #print current information about instance of a Defensive Missile
    def printMissile(self):
@@ -73,17 +71,7 @@ class DefensiveMissile():
                #if the missile was a success at its target
                randomHit = random.random()
                #print(randomHit)
-               #determine which probability to use for effectiveness of defensive missile
-               #determined based on how close the offensive missile is to its target
-               #offensive missile changes flight path based off this
-               currentHitProb = 0
-               if(abs(self.target.loc - self.target.target.loc) < 5):
-                   currentHitProb = self.defHitProbP3
-               elif(abs(self.target.loc - self.target.target.loc) < 20):
-                   currentHitProb = self.defHitProbP2
-               else:
-                   currentHitProb = self.defHitProbP1
-               if(self.target.flying and randomHit <= currentHitProb):
+               if(self.target.flying and randomHit <= self.HitProb):
                    self.target.setFlyingStatus(False)  
                    return True
        return False

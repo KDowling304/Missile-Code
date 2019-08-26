@@ -35,30 +35,40 @@ if __name__ == "__main__":
     print('')
     
     #Initialize Ships
-    blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location'][0], 
-                sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0], 
+    blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
+                sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0],
+                sheet1['ESSMs'][0], sheet1['Sea RAMs'][0], 
+                sheet1['CIWS (each has 3000 rounds)'][0],
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
-                timeStep, sheet1['Missile Range (NM)'][0], 
+                timeStep, sheet1['Offensive Missile Range (NM)'][0], 
                 sheet1['Offensive Missile Success Probability'][0],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 1)'][0],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][0],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][0],
+                sheet1['ESSM Success Probability'][0],
+                sheet1['Sea RAM Success Probability'][0],
+                sheet1['CIWS Success Probability'][0],
                 sheet1['Satellite'][0], sheet1['Radar'][0], 
                 sheet1['Electronic Surveillance'][0], 
                 sheet1['Passive Sensors (Acoustic)'][0],
                 sheet1['UAV'][0], sheet1['USV'][0])
-    redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location'][1], 
+    redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
+                sheet1['ESSMs'][1], sheet1['Sea RAMs'][1], 
+                sheet1['CIWS (each has 3000 rounds)'][1],
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
-                timeStep, sheet1['Missile Range (NM)'][1], 
+                timeStep, sheet1['Offensive Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 100-20 NM from its target - phase 1)'][1],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][1],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][1],
-                sheet1['Satellite'][0], sheet1['Radar'][0], 
-                sheet1['Electronic Surveillance'][0], 
-                sheet1['Passive Sensors (Acoustic)'][0],
-                sheet1['UAV'][0], sheet1['USV'][0])
+                sheet1['ESSM Success Probability'][1],
+                sheet1['Sea RAM Success Probability'][1],
+                sheet1['CIWS Success Probability'][1],
+                sheet1['Satellite'][1], sheet1['Radar'][1], 
+                sheet1['Electronic Surveillance'][1], 
+                sheet1['Passive Sensors (Acoustic)'][1],
+                sheet1['UAV'][1 ], sheet1['USV'][1])
     
     #Print Initialized Ships
     #redShip.printShip()

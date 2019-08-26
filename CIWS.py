@@ -1,36 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 15 13:58:51 2019
+Created on Fri Aug 23 10:51:24 2019
 
 @author: karadowling
 
-Defensive Missile Class for each defensive missile for both Red and Blue Ships
+CIWS Class for both Red and Blue Ships
+A 30mm gun that fires about 3000 rounds each time it is used
+A Point Defense System
+Used when incoming offensive missile is 1-0 NM from its target
+Method of last defense
 """
 
 import random
 
-class DefensiveMissile():
+class CIWS():
     
    #initialize a single Defensive Missile 
-   def __init__(self, loc, target, missileSpeed, defHitProbP1, defHitProbP2, defHitProbP3):
+   def __init__(self, loc, target, bulletSpeed, ciwsHitProb):
        self.loc = loc #location of missile on 1D scale
        self.target = target #target missile
        #is the missile flying
        #false if reached destination already or if has been hit 
        self.flying = False
-       #missile speed when flying
-       self.missileSpeed = missileSpeed
+       #nullet speed when flying
+       self.bulletSpeed = bulletSpeed
        #direction of missile flight
        self.directionalVelocity = None
-       #probability of success of missile when reached target 
-       #depending on target offensive missile's phase of flight
-       #Phase 1 (100-20 NM from ship)
-       self.defHitProbP1 = defHitProbP1
-       #Phase 2 (20-5 NM from ship)
-       self.defHitProbP2 = defHitProbP2
-       #Phase 3 (5-0 NM from ship)
-       self.defHitProbP3 = defHitProbP3
+       #CIWS success probability
+       self.HitProb = ciwsHitProb
        
    #print current information about instance of a Defensive Missile
    def printMissile(self):
@@ -40,9 +38,9 @@ class DefensiveMissile():
        print('')
        
    #moves particular missile the specified distance per timeStep
-   def moveMissile(self, timeStep, shipLoc):
+   def moveCIWS(self, timeStep, shipLoc):
        if(self.flying == True):
-           self.loc = self.loc + self.directionalVelocity * self.missileSpeed * (1/60) * timeStep
+           self.loc = self.loc + self.directionalVelocity * self.bulletSpeed * (1/60) * timeStep
        if(self.flying == False and self.target == None):
             self.loc = shipLoc
    
@@ -57,8 +55,9 @@ class DefensiveMissile():
    def setFlyingStatus(self, flyingStatus):
        self.flying = flyingStatus
        
-   #launches missile which means giving a missile a target and setting it to flying
-   def launchMissile(self, target):
+   #fires one set of 3000 bullet rounds
+   #which means giving CIWS a target and setting it to flying
+   def fireBulletRounds(self, target):
        self.setTarget(target)
        self.setFlyingStatus(True)
    
@@ -73,17 +72,7 @@ class DefensiveMissile():
                #if the missile was a success at its target
                randomHit = random.random()
                #print(randomHit)
-               #determine which probability to use for effectiveness of defensive missile
-               #determined based on how close the offensive missile is to its target
-               #offensive missile changes flight path based off this
-               currentHitProb = 0
-               if(abs(self.target.loc - self.target.target.loc) < 5):
-                   currentHitProb = self.defHitProbP3
-               elif(abs(self.target.loc - self.target.target.loc) < 20):
-                   currentHitProb = self.defHitProbP2
-               else:
-                   currentHitProb = self.defHitProbP1
-               if(self.target.flying and randomHit <= currentHitProb):
+               if(self.target.flying and randomHit <= self.HitProb):
                    self.target.setFlyingStatus(False)  
                    return True
        return False
