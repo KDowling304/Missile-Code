@@ -5,7 +5,7 @@ Created on Fri Aug 23 10:51:22 2019
 
 @author: karadowling
 
-Extended NATO Sea Sparrow Class for both Red and Blue Ships
+Extended NATO Sea Sparrow Class Missile for both Red and Blue Ships
 ESSMs are a point defense system
 Used when incoming offensive missile is 3-5 NM from its target
 Shoot-Shoot doctrine 

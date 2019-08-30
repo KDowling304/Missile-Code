@@ -110,6 +110,12 @@ class Ship():
         print(str(self.offensiveMissileTotal - self.omf) + " offensive missiles left in ship's arsenal") 
         print(str(self.dmf) + " defensive missiles already fired")
         print(str(self.defensiveMissileTotal - self.dmf) + " defensive missiles left in ship's arsenal") 
+        print(str(self.essmf) + " ESSMs already fired")
+        print(str(self.essmTotal - self.essmf) + " ESSMs left in ship's arsenal") 
+        print(str(self.seaRamf) + " Sea RAMs already fired")
+        print(str(self.seaRamTotal - self.seaRamf) + " Sea RAMs left in ship's arsenal") 
+        print(str(self.ciwsf) + " sets of 3000 CIWS bullets already fired")
+        print(str(self.ciwsTotal - self.ciwsf) + " sets of 3000 CIWS bullets left in ship's arsenal") 
         print('')
   
     #calls function in missile classes to move each missile that is flying
@@ -330,7 +336,7 @@ class Ship():
             if missile.target == None or (missile.target != None and missile.flying):
                 offenseFiredDown = False
     
-        if(self.offensiveMissileTotal - self.omf <= 0 and self.defensiveMissileTotal - self.dmf <= 0):
+        if(self.offensiveMissileTotal - self.omf <= 0 and self.defensiveMissileTotal - self.dmf <= 0 and self.essmTotal - self.essmf <=0 and self.seaRamTotal - self.seaRamf <= 0 and self.ciwsTotal - self.ciwsf <=0):
             return True
         elif(offenseFiredDown):
             return True
