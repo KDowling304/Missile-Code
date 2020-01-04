@@ -80,27 +80,33 @@ if __name__ == "__main__":
     
     #Create Plot List for Missile Count Over Time
     simulationTimeArray = [] #
-    RedNumberOffensiveMissiles = []
-    RedNumberDefensiveMissiles = []
-    RedNumberESSMs = []
-    RedNumberSeaRAMs = []
-    RedNumberCIWS = []
     BlueNumberOffensiveMissiles = []
     BlueNumberDefensiveMissiles = []
     BlueNumberESSMs = []
     BlueNumberSeaRAMs = []
     BlueNumberCIWS = []
+    BlueShipOffensiveMissileRange = []
+    RedNumberOffensiveMissiles = []
+    RedNumberDefensiveMissiles = []
+    RedNumberESSMs = []
+    RedNumberSeaRAMs = []
+    RedNumberCIWS = []
+    RedShipOffensiveMissileRange = []
+    ShipRange = []
     simulationTimeArray.append(0)
-    RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal)
-    RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal)
-    RedNumberESSMs.append(redShip.essmTotal)
-    RedNumberSeaRAMs.append(redShip.seaRamTotal)
-    RedNumberCIWS.append(redShip.ciwsTotal)
     BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal)
     BlueNumberDefensiveMissiles.append(blueShip.defensiveMissileTotal)
     BlueNumberESSMs.append(blueShip.essmTotal)
     BlueNumberSeaRAMs.append(blueShip.seaRamTotal)
     BlueNumberCIWS.append(blueShip.ciwsTotal)
+    BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+    RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal)
+    RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal)
+    RedNumberESSMs.append(redShip.essmTotal)
+    RedNumberSeaRAMs.append(redShip.seaRamTotal)
+    RedNumberCIWS.append(redShip.ciwsTotal)
+    RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+    ShipRange.append(abs(redShip.loc-blueShip.loc))
     
     #Run Missile Simulation
     #keeps track of iterations that are representative of minutes
@@ -116,16 +122,16 @@ if __name__ == "__main__":
         if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
             break 
         #move ships if they are out of range
-        redShip.moveShip(blueShip, animationFile, simulationTime)
         blueShip.moveShip(redShip, animationFile, simulationTime)
+        redShip.moveShip(blueShip, animationFile, simulationTime)
         #determine if there are target ships or missiles for the ships
-        redShip.findShipTargets(blueShip)
-        redShip.findMissileTargets(blueShip)
         blueShip.findShipTargets(redShip)
         blueShip.findMissileTargets(redShip)
+        redShip.findShipTargets(blueShip)
+        redShip.findMissileTargets(blueShip)
         #check if any flying missiles have hit their targets
-        redShip.checkHitTargets(animationFile, simulationTime)
         blueShip.checkHitTargets(animationFile, simulationTime)
+        redShip.checkHitTargets(animationFile, simulationTime)
         #print the time elapsed in the simulation
         print("Time Elapsed: " + str(simulationTime))
         print('')
@@ -134,16 +140,19 @@ if __name__ == "__main__":
         blueShip.printShip()
         print('')
         simulationTimeArray.append(simulationTime)
-        RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal - redShip.omf)
-        RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal - redShip.dmf)
-        RedNumberESSMs.append(redShip.essmTotal - redShip.essmf)
-        RedNumberSeaRAMs.append(redShip.seaRamTotal - redShip.seaRamf)
-        RedNumberCIWS.append(redShip.ciwsTotal - redShip.ciwsf)
         BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal - blueShip.omf)
         BlueNumberDefensiveMissiles.append(blueShip.defensiveMissileTotal - blueShip.dmf)
         BlueNumberESSMs.append(blueShip.essmTotal - blueShip.essmf)
         BlueNumberSeaRAMs.append(blueShip.seaRamTotal - blueShip.seaRamf)
         BlueNumberCIWS.append(blueShip.ciwsTotal - blueShip.ciwsf)
+        BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+        RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal - redShip.omf)
+        RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal - redShip.dmf)
+        RedNumberESSMs.append(redShip.essmTotal - redShip.essmf)
+        RedNumberSeaRAMs.append(redShip.seaRamTotal - redShip.seaRamf)
+        RedNumberCIWS.append(redShip.ciwsTotal - redShip.ciwsf)
+        RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+        ShipRange.append(abs(redShip.loc-blueShip.loc))
         #move all flying missiles forward to next state according to time and speed
         redShip.moveAllMissiles()
         blueShip.moveAllMissiles()
@@ -151,8 +160,8 @@ if __name__ == "__main__":
         simulationTime = simulationTime + 0.25
     animationFile.close()
  
-    plt.plot(simulationTimeArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
     plt.plot(simulationTimeArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
+    plt.plot(simulationTimeArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
     plt.axes
@@ -161,8 +170,9 @@ if __name__ == "__main__":
     plt.title('Offensive Missiles Left in Ships\' Arsenals over Time')
     plt.savefig('OffensiveMissilesOverTime.png', dpi=600)
     plt.show()
-    plt.plot(simulationTimeArray, RedNumberDefensiveMissiles, color='red', label='Red Ship')
+    
     plt.plot(simulationTimeArray, BlueNumberDefensiveMissiles, color='blue', label='Blue Ship')
+    plt.plot(simulationTimeArray, RedNumberDefensiveMissiles, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim((0, 5 + max(redShip.defensiveMissileTotal, blueShip.defensiveMissileTotal)))
     plt.xlabel('Simulation Time (minutes)')
@@ -170,8 +180,9 @@ if __name__ == "__main__":
     plt.title('Defensive Missiles Left in Ships\' Arsenals over Time')
     plt.savefig('DefensiveMissilesOverTime.png', dpi=600)
     plt.show()
-    plt.plot(simulationTimeArray, RedNumberESSMs, color='red', label='Red Ship')
+    
     plt.plot(simulationTimeArray, BlueNumberESSMs, color='blue', label='Blue Ship')
+    plt.plot(simulationTimeArray, RedNumberESSMs, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
     plt.axes
@@ -180,8 +191,9 @@ if __name__ == "__main__":
     plt.title('ESSMs Left in Ships\' Arsenals over Time')
     plt.savefig('ESSMs.png', dpi=600)
     plt.show()
-    plt.plot(simulationTimeArray, RedNumberSeaRAMs, color='red', label='Red Ship')
+    
     plt.plot(simulationTimeArray, BlueNumberSeaRAMs, color='blue', label='Blue Ship')
+    plt.plot(simulationTimeArray, RedNumberSeaRAMs, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
     plt.axes
@@ -190,8 +202,9 @@ if __name__ == "__main__":
     plt.title('Sea RAMs Left in Ships\' Arsenals over Time')
     plt.savefig('SeaRAMs.png', dpi=600)
     plt.show()
-    plt.plot(simulationTimeArray, RedNumberCIWS, color='red', label='Red Ship')
+    
     plt.plot(simulationTimeArray, BlueNumberCIWS, color='blue', label='Blue Ship')
+    plt.plot(simulationTimeArray, RedNumberCIWS, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
     plt.axes
@@ -199,6 +212,18 @@ if __name__ == "__main__":
     plt.ylabel('CIWS Left')
     plt.title('CIWS Left in Ships\' Arsenals over Time')
     plt.savefig('CIWS.png', dpi=600)
+    plt.show()
+    
+    plt.plot(simulationTimeArray, BlueShipOffensiveMissileRange, color='blue', label='Blue Offensive Missile Range')
+    plt.plot(simulationTimeArray, RedShipOffensiveMissileRange, color='red', label='Red Offensive Missile Range')
+    plt.plot(simulationTimeArray, ShipRange, color='black', label='Range Between Ships over Time')
+    plt.legend()
+    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
+    plt.axes
+    plt.xlabel('Simulation Time (minutes)')
+    plt.ylabel('Range (NM)')
+    plt.title('Distance between Red and Blue Ships')
+    plt.savefig('ShipDistance.png', dpi=600)
     plt.show()
     
     
