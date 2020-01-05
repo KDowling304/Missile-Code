@@ -84,12 +84,14 @@ if __name__ == "__main__":
     BlueNumberSeaRAMs = []
     BlueNumberCIWS = []
     BlueShipOffensiveMissileRange = []
+    BlueShipHit = []
     RedNumberOffensiveMissiles = []
     RedNumberDefensiveMissiles = []
     RedNumberESSMs = []
     RedNumberSeaRAMs = []
     RedNumberCIWS = []
     RedShipOffensiveMissileRange = []
+    RedShipHit = []
     ShipRange = []
     
 
@@ -183,14 +185,44 @@ if __name__ == "__main__":
         BlueNumberSeaRAMs.append(blueShip.seaRamf)
         BlueNumberCIWS.append(blueShip.ciwsf)
         BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+        BlueShipHit.append(blueShip.hit)
         RedNumberOffensiveMissiles.append(redShip.omf)
         RedNumberDefensiveMissiles.append(redShip.dmf)
         RedNumberESSMs.append(redShip.essmf)
         RedNumberSeaRAMs.append(redShip.seaRamf)
         RedNumberCIWS.append(redShip.ciwsf)
         RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+        RedShipHit.append(redShip.hit)
         ShipRange.append(abs(blueShip.loc-redShip.loc))
         
+    #Number of simulation runs Blue Ship Hit
+    BlueShipHitNumber = BlueShipHit.count(True)
+    #print(BlueShipHitNumber)
+    #Proportion of total simulation runs that blue ship is hit (loses)
+    BlueShipHitProp = BlueShipHitNumber/len(BlueShipHit)
+    print("Proportion of Iterations Blue Ship Hit: " + str(BlueShipHitProp))
+    
+    #Number of simulation runs Blue Ship Hit
+    RedShipHitNumber = RedShipHit.count(True)
+    #print(RedShipHitNumber)
+    #Proportion of total simulation runs that red ship is hit (loses)
+    RedShipHitProp = RedShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations Red Ship Hit: " + str(RedShipHitProp))
+    
+    BothShipHitNumber = 0
+    NoShipHitNumber = 0
+    for s in range(len(RedShipHit)):
+        if(RedShipHit[s] == True and BlueShipHit[s] == True):
+            BothShipHitNumber = BothShipHitNumber + 1
+        if(RedShipHit[s] == False and BlueShipHit[s] == False):
+            NoShipHitNumber = NoShipHitNumber + 1
+        
+    BothShipHitProp = BothShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations Both Ships Hit (should be 0): " + str(BothShipHitProp))
+    NoShipHitProp = NoShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations No Ships Hit: " + str(NoShipHitProp))
+    print()
+    
     print("Average Blue Offensive Missiles Fired: " + str(np.mean(BlueNumberOffensiveMissiles)) + " of total " + str(blueShip.offensiveMissileTotal))
     print("Average Red Offensive Missiles Fired: " + str(np.mean(RedNumberOffensiveMissiles)) + " of total " + str(redShip.offensiveMissileTotal))
     print()
@@ -215,6 +247,7 @@ if __name__ == "__main__":
     print("Red Offensive Missile Range: " + str(redShip.offensiveMissileRange))
     print("Average Range Between Ships: " + str(np.mean(ShipRange)))
     print()
+    
     
     plt.scatter(iterationArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
     plt.scatter(iterationArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
