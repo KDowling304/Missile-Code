@@ -13,6 +13,7 @@ from ESSM import ESSM
 from SeaRAM import SeaRAM
 from CIWS import CIWS
 import random
+from texttable import Texttable
 
 class Ship():
     
@@ -22,6 +23,7 @@ class Ship():
                  shipSpeed, missileSpeed, timeStep, offensiveMissileRange, offHitProb, 
                  defHitProbP1, defHitProbP2, defHitProbP3, 
                  essmHitProb, seaRamHitProb, ciwsHitProb,
+                 offensiveMissileSS, defensiveMissileSS, essmSS, seaRamSS, ciwsSS,
                  satellite, radar, electronicSurveillance, passiveSensors, 
                  uav, usv):
         #name of ship
@@ -55,7 +57,7 @@ class Ship():
         #range of ship's missiles
         self.offensiveMissileRange = offensiveMissileRange
         #Don't need all of these because they are saved as a part of each missile
-        '''#offensive missile success probability
+        #offensive missile success probability
         self.offHitProb = offHitProb
         #probability of success of missile when reached target 
         #depending on target offensive missile's phase of flight
@@ -70,7 +72,7 @@ class Ship():
         #Sea RAM success probability
         self.seaRamHitProb = seaRamHitProb
         #CIWS success probability
-        self.ciwsHitProb = ciwsHitProb'''
+        self.ciwsHitProb = ciwsHitProb
         #Missiles Lists
         #initialize lists with size of arsenals
         #list of offensive missiles on/fired by particular ship
@@ -86,6 +88,11 @@ class Ship():
         #scouting variables
         #each comment corresponds with true value
         #communicating with satellite
+        self.offensiveMissileSS = offensiveMissileSS
+        self.defensiveMissileSS = defensiveMissileSS
+        self.essmSS = essmSS
+        self.seaRamSS = seaRamSS
+        self.ciwsSS = ciwsSS
         self.satellite = bool(satellite)
         #active radar on
         self.radar = bool(radar)
@@ -97,6 +104,93 @@ class Ship():
         self.uav = bool(uav)
         #Unmanned Surface Vehicle (USV) deployed
         self.usv = bool(usv)
+
+    #print ship inputs when they are changing in code
+    def printShipInputs(self, otherShip):
+        t = Texttable()
+        #t.add_rows([['Name', 'Age'], ['Alice', 24], ['Bob', 19]])
+        if(self.satellite == 1):
+            selfSatellite = 'TRUE'
+        else:
+            selfSatellite = 'FALSE'
+        if(self.radar == 1):
+            selfRadar = 'TRUE'
+        else:
+            selfRadar = 'FALSE'
+        if(self.electronicSurveillance == 1):
+            selfElectronicSurveillance = 'TRUE'
+        else:
+            selfElectronicSurveillance = 'FALSE'
+        if(self.passiveSensors == 1):
+            selfPassiveSensors = 'TRUE'
+        else:
+            selfPassiveSensors = 'FALSE'
+        if(self.uav == 1):
+            selfUav = 'TRUE'
+        else:
+            selfUav = 'FALSE'
+        if(self.usv == 1):
+            selfUsv = 'TRUE'
+        else:
+            selfUsv = 'FALSE'
+            
+        if(otherShip.satellite == 1):
+            otherShipSatellite = 'TRUE'
+        else:
+            otherShipSatellite = 'FALSE'
+        if(otherShip.radar == 1):
+            otherShipRadar = 'TRUE'
+        else:
+            otherShipRadar = 'FALSE'
+        if(otherShip.electronicSurveillance == 1):
+            otherShipElectronicSurveillance = 'TRUE'
+        else:
+            otherShipElectronicSurveillance = 'FALSE'
+        if(otherShip.passiveSensors == 1):
+            otherShipPassiveSensors = 'TRUE'
+        else:
+            otherShipPassiveSensors = 'FALSE'
+        if(otherShip.uav == 1):
+            otherShipUav = 'TRUE'
+        else:
+            otherShipUav = 'FALSE'
+        if(otherShip.usv == 1):
+            otherShipUsv = 'TRUE'
+        else:
+            otherShipUsv = 'FALSE'
+
+        
+        t.add_rows([['', self.name, otherShip.name], 
+                    ['Starting Location (NM) 1D Scale', self.loc, otherShip.loc], 
+                    ['Ship Speed (kn)', self.shipSpeed, otherShip.shipSpeed],
+                    ['Missile Speed (kn)', self.missileSpeed, otherShip.missileSpeed],
+                    ['Offensive Missile Inventory', self.offensiveMissileTotal, otherShip.offensiveMissileTotal],
+                    ['Offensive Missile Range (NM)', self.offensiveMissileRange, otherShip.offensiveMissileRange],
+                    ['Offensive Missile Success Probability', self.offHitProb, otherShip.offHitProb],
+                    ['Offensive Missile Salvo Size', self.offensiveMissileSS, otherShip.offensiveMissileSS],
+                    ['Defensive Missile Inventory', self.defensiveMissileTotal, otherShip.defensiveMissileTotal],
+                    ['Defensive Missile Success Probability\n(if target offensive missile is\n100-20 NM from its target - phase 1)', self.defHitProbP1, otherShip.defHitProbP1],
+                    ['Defensive Missile Success Probability\n(if target offensive missile is\n20-5 NM from its target - phase 2)', self.defHitProbP2, otherShip.defHitProbP2],
+                    ['Defensive Missile Success Probability\n(if target offensive missile is\n5-1 NM from its target - phase 3)', self.defHitProbP3, otherShip.defHitProbP3],
+                    ['Defensive Missile Salvo Size', self.defensiveMissileSS, otherShip.defensiveMissileSS],
+                    ['ESSM Inventory', self.essmTotal, otherShip.essmTotal],
+                    ['ESSM Success Probability', self.essmHitProb, otherShip.essmHitProb],
+                    ['ESSM Salvo Size', self.essmSS, otherShip.essmSS],
+                    ['Sea RAM Inventory', self.seaRamTotal, otherShip.seaRamTotal],
+                    ['Sea RAM Success Probability', self.seaRamHitProb, otherShip.seaRamHitProb],
+                    ['Sea RAM Salvo Size', self.seaRamSS, otherShip.seaRamSS],
+                    ['CIWS Inventory (1500 rounds each)', self.ciwsTotal, otherShip.ciwsTotal],
+                    ['CIWS Iteration Success Probability', self.ciwsHitProb, otherShip.ciwsHitProb],
+                    ['CIWS Iteration Salvo Size', self.ciwsSS, otherShip.ciwsSS],
+                    ['Satellite', selfSatellite, otherShipSatellite],
+                    ['Radar', selfRadar, otherShipRadar],
+                    ['Electronic Surveillance', selfElectronicSurveillance, otherShipElectronicSurveillance],
+                    ['Passive Sensors', selfPassiveSensors, otherShipPassiveSensors],
+                    ['Unmanned Aerial Vehicle (UAV)', selfUav, otherShipUav],
+                    ['Unmanned Surface Vehicle (USV)', selfUsv, otherShipUsv]])
+        print(t.draw())
+        print()
+        
 
     #print current information about instance of Ship
     def printShip(self):
@@ -116,6 +210,7 @@ class Ship():
         print(str(self.seaRamTotal - self.seaRamf) + " Sea RAMs left in ship's arsenal") 
         print(str(self.ciwsf) + " sets of 3000 CIWS bullets already fired")
         print(str(self.ciwsTotal - self.ciwsf) + " sets of 3000 CIWS bullets left in ship's arsenal") 
+        print("Current cost of engagement: $" + f"{self.engagementCost():,d}")
         print('')
   
     #calls function in missile classes to move each missile that is flying
@@ -137,8 +232,12 @@ class Ship():
         '''if (abs(self.loc - otherShip.loc) > self.offensiveMissileRange):
             directionalVelocity = (otherShip.loc - self.loc)/abs(otherShip.loc - self.loc) 
             self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep'''
+        if(self.offensiveMissileTotal - self.omf <= 0):
+            directionalVelocity = -1*((otherShip.loc - self.loc)/abs(otherShip.loc - self.loc))
+            self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep    
+            animationFile.write(str(simulationTime) + " " + str(self.loc) + " " + self.name + " ship " + str(False) + "\n")
         #move until they get 5 NM from each other 
-        if (abs(self.loc - otherShip.loc) > 5):
+        elif (abs(self.loc - otherShip.loc) > 5):
             directionalVelocity = (otherShip.loc - self.loc)/abs(otherShip.loc - self.loc) 
             self.loc = self.loc + directionalVelocity * self.shipSpeed * (1/60) * self.timeStep
             animationFile.write(str(simulationTime) + " " + str(self.loc) + " " + self.name + " ship " + str(False) + "\n")
@@ -200,7 +299,7 @@ class Ship():
                     #therefore either the offensive missile was unsuccessful already or hasn't been shot at
                     if(missile.flying == True):
                         shootCount = shootCount + 1       
-                if(shootCount < 4):
+                if(shootCount < self.offensiveMissileSS):
                     self.launchOffensiveMissile(otherShip)
   
                             
@@ -248,11 +347,11 @@ class Ship():
                     self.launchPointDefense(incomingMissile, incomingTargetDistance)
                 #simplified shoot, look, shoot method with SM-2
                 elif(incomingTargetDistance <=20 and incomingTargetDistance > 5):
-                    if(shootCount < 2):
+                    if(shootCount < self.defensiveMissileSS):
                         self.launchDefensiveMissile(incomingMissile)
                 #simplified shoot, shoot, look, shoot method with SM-2
                 elif(incomingTargetDistance <=100 and incomingTargetDistance > 20):
-                    if(shootCount < 2):
+                    if(shootCount < self.defensiveMissileSS):
                         self.launchDefensiveMissile(incomingMissile)
     
     #called by findMissileTargets when wanting to launch any Point Defense System
@@ -266,7 +365,7 @@ class Ship():
                 if(essm.flying):
                     if(targetMissile == essm.target):
                         shootCount = shootCount + 1
-            if(shootCount < 2):
+            if(shootCount < self.essmSS):
                   #can only launch missile if there are missiles left to be fired
                   if(self.essmTotal - self.essmf > 0):
                       self.essmList[self.essmf].launchMissile(targetMissile)
@@ -278,7 +377,7 @@ class Ship():
                 if(seaRam.flying):
                     if(targetMissile == seaRam.target):
                         shootCount = shootCount + 1
-            if(shootCount < 2):
+            if(shootCount < self.seaRamSS):
                   #can only launch missile if there are missiles left to be fired
                   if(self.seaRamTotal - self.seaRamf > 0):
                       self.seaRamList[self.seaRamf].launchMissile(targetMissile)
@@ -290,7 +389,7 @@ class Ship():
                 if(ciws.flying):
                     if(targetMissile == ciws.target):
                         shootCount = shootCount + 1
-            if(shootCount < 1):
+            if(shootCount < self.ciwsSS):
                   #can only fire bullets if there are bullets left
                   if(self.ciwsTotal - self.ciwsf > 0):
                       self.ciwsList[self.ciwsf].fireBulletRounds(targetMissile)
@@ -342,4 +441,20 @@ class Ship():
             return True
         else:
             return False
+        
+    def engagementCost(self):
+        currentCost = 0
+        if self.hit == True :
+            currentCost = currentCost + 2000000000
+        if self.offensiveMissileRange >= 300:
+            currentCost = currentCost + self.omf * 2000000
+        else:
+            currentCost = currentCost + self.omf * 1000000
+        currentCost = currentCost + self.dmf * 1000000
+        currentCost = currentCost + self.essmf * 956000
+        currentCost = currentCost + self.seaRamf * 998000
+        currentCost = currentCost + self.ciwsf * 200000
+        return(currentCost)
+  
+        
             

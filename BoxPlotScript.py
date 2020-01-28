@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -14,8 +15,9 @@ either ship is hit by a missle or both ships are out of missiles.
 
 #from collections import namedtuple
 import pandas as pd
-#import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 #from matplotlib.ticker import MaxNLocator
 #from copy import copy
 #import math
@@ -30,15 +32,17 @@ if __name__ == "__main__":
 
 
     #time step for each iteration of "game" in minuntes
-    timeStep = sheet2['Time Step (minutes)'][0]
+    #timeStep = sheet2['Time Step (minutes)'][0]
+    timeStep = 0.25
     #print("Time step each iteration is " + str(timeStep) + " minutes")
     #print('')
     
-    iterations = sheet2['Iterations of Simulation'][0]
+    #iterations = sheet2['Iterations of Simulation'][0]
+    iterations = 10
     print("Simulation Iterations: " + str(iterations) + "\n")
     
     #initial data blueShip
-    initialBlue = [sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
+    """initialBlue = [sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0],
                 sheet1['ESSMs'][0], sheet1['Sea RAMs'][0], 
                 sheet1['CIWS (each has 3000 rounds)'][0],
@@ -54,9 +58,61 @@ if __name__ == "__main__":
                 sheet1['Satellite'][0], sheet1['Radar'][0], 
                 sheet1['Electronic Surveillance'][0], 
                 sheet1['Passive Sensors (Acoustic)'][0],
-                sheet1['UAV'][0], sheet1['USV'][0]]
+                sheet1['UAV'][0], sheet1['USV'][0]]"""
+    initialBlueZero = ["Blue Ship", 0, 
+                20, 60,
+                32, 20, 
+                3,
+                30, 530, 
+                0.25, 0, 
+                9/10,
+                1/2,
+                1/3,
+                1/9,
+                1/2,
+                1/2,
+                1/10,
+                False, True, 
+                True, 
+                True,
+                False, False]
+    initialBlueHundred = ["Blue Ship", 0, 
+                20, 60,
+                32, 20, 
+                3,
+                30, 530, 
+                0.25, 100, 
+                9/10,
+                1/2,
+                1/3,
+                1/9,
+                1/2,
+                1/2,
+                1/10,
+                False, True, 
+                True, 
+                True,
+                False, False]
+    initialBlueThreeHundred = ["Blue Ship", 0, 
+                20, 60,
+                32, 20, 
+                3,
+                30, 530, 
+                0.25, 300, 
+                9/10,
+                1/2,
+                1/3,
+                1/9,
+                1/2,
+                1/2,
+                1/10,
+                False, True, 
+                True, 
+                True,
+                False, False]
     
-    initialRed = [sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
+    
+    '''initialRed = [sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['ESSMs'][1], sheet1['Sea RAMs'][1], 
                 sheet1['CIWS (each has 3000 rounds)'][1],
@@ -72,21 +128,44 @@ if __name__ == "__main__":
                 sheet1['Satellite'][1], sheet1['Radar'][1], 
                 sheet1['Electronic Surveillance'][1], 
                 sheet1['Passive Sensors (Acoustic)'][1],
-                sheet1['UAV'][1 ], sheet1['USV'][1]]
+                sheet1['UAV'][1 ], sheet1['USV'][1]]'''
+    initialRed = ["Red Ship", 300, 
+                20, 60,
+                32, 20, 
+                3,
+                30, 530, 
+                0.25, 300, 
+                9/10,
+                1/2,
+                1/3,
+                1/9,
+                1/2,
+                1/2,
+                1/10,
+                False, True, 
+                True, 
+                True,
+                False, False]
     
     #Create Plot List for Missile Count Over Time
     iterationArray = [] 
     simulationTimeArray = []
-    RedNumberOffensiveMissiles = []
-    RedNumberDefensiveMissiles = []
-    RedNumberESSMs = []
-    RedNumberSeaRAMs = []
-    RedNumberCIWS = []
     BlueNumberOffensiveMissiles = []
     BlueNumberDefensiveMissiles = []
     BlueNumberESSMs = []
     BlueNumberSeaRAMs = []
     BlueNumberCIWS = []
+    BlueShipOffensiveMissileRange = []
+    BlueShipHit = []
+    RedNumberOffensiveMissiles = []
+    RedNumberDefensiveMissiles = []
+    RedNumberESSMs = []
+    RedNumberSeaRAMs = []
+    RedNumberCIWS = []
+    RedShipOffensiveMissileRange = []
+    RedShipHit = []
+    ShipRange = []
+    
 
     
     for i in range(iterations):
@@ -150,46 +229,100 @@ if __name__ == "__main__":
             if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
                 break 
             #move ships if they are out of range
-            redShip.moveShip(blueShip, animationFile, simulationTime)
             blueShip.moveShip(redShip, animationFile, simulationTime)
+            redShip.moveShip(blueShip, animationFile, simulationTime)
             #determine if there are target ships or missiles for the ships
-            redShip.findShipTargets(blueShip)
-            redShip.findMissileTargets(blueShip)
             blueShip.findShipTargets(redShip)
             blueShip.findMissileTargets(redShip)
+            redShip.findShipTargets(blueShip)
+            redShip.findMissileTargets(blueShip)
             #check if any flying missiles have hit their targets
-            redShip.checkHitTargets(animationFile, simulationTime)
             blueShip.checkHitTargets(animationFile, simulationTime)
-            '''#print the time elapsed in the simulation
-            print("Time Elapsed: " + str(simulationTime))
-            print('')
-            #print the ship summaries
-            redShip.printShip()
-            blueShip.printShip()
-            print('')'''
+            redShip.checkHitTargets(animationFile, simulationTime)
             #move all flying missiles forward to next state according to time and speed
-            redShip.moveAllMissiles()
             blueShip.moveAllMissiles()
+            redShip.moveAllMissiles()
             #increment the simulation time
             simulationTime = simulationTime + 0.25
         animationFile.close()
-        redShip.printShip()
+        print("Iteration: " + str(i + 1))
+        print()
         blueShip.printShip()
+        redShip.printShip()
         iterationArray.append(i)
         simulationTimeArray.append(simulationTime)
-        RedNumberOffensiveMissiles.append(redShip.omf)
-        RedNumberDefensiveMissiles.append(redShip.dmf)
-        RedNumberESSMs.append(redShip.essmf)
-        RedNumberSeaRAMs.append(redShip.seaRamf)
-        RedNumberCIWS.append(redShip.ciwsf)
         BlueNumberOffensiveMissiles.append(blueShip.omf)
         BlueNumberDefensiveMissiles.append(blueShip.dmf)
         BlueNumberESSMs.append(blueShip.essmf)
         BlueNumberSeaRAMs.append(blueShip.seaRamf)
         BlueNumberCIWS.append(blueShip.ciwsf)
+        BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+        BlueShipHit.append(blueShip.hit)
+        RedNumberOffensiveMissiles.append(redShip.omf)
+        RedNumberDefensiveMissiles.append(redShip.dmf)
+        RedNumberESSMs.append(redShip.essmf)
+        RedNumberSeaRAMs.append(redShip.seaRamf)
+        RedNumberCIWS.append(redShip.ciwsf)
+        RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+        RedShipHit.append(redShip.hit)
+        ShipRange.append(abs(blueShip.loc-redShip.loc))
         
-    plt.scatter(iterationArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
+    #Number of simulation runs Blue Ship Hit
+    BlueShipHitNumber = BlueShipHit.count(True)
+    #print(BlueShipHitNumber)
+    #Proportion of total simulation runs that blue ship is hit (loses)
+    BlueShipHitProp = BlueShipHitNumber/len(BlueShipHit)
+    print("Proportion of Iterations Blue Ship Hit: " + str(BlueShipHitProp))
+    
+    #Number of simulation runs Blue Ship Hit
+    RedShipHitNumber = RedShipHit.count(True)
+    #print(RedShipHitNumber)
+    #Proportion of total simulation runs that red ship is hit (loses)
+    RedShipHitProp = RedShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations Red Ship Hit: " + str(RedShipHitProp))
+    
+    BothShipHitNumber = 0
+    NoShipHitNumber = 0
+    for s in range(len(RedShipHit)):
+        if(RedShipHit[s] == True and BlueShipHit[s] == True):
+            BothShipHitNumber = BothShipHitNumber + 1
+        if(RedShipHit[s] == False and BlueShipHit[s] == False):
+            NoShipHitNumber = NoShipHitNumber + 1
+        
+    BothShipHitProp = BothShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations Both Ships Hit (should be 0): " + str(BothShipHitProp))
+    NoShipHitProp = NoShipHitNumber/len(RedShipHit)
+    print("Proportion of Iterations No Ships Hit: " + str(NoShipHitProp))
+    print()
+    
+    print("Average Blue Offensive Missiles Fired: " + str(np.mean(BlueNumberOffensiveMissiles)) + " of total " + str(blueShip.offensiveMissileTotal))
+    print("Average Red Offensive Missiles Fired: " + str(np.mean(RedNumberOffensiveMissiles)) + " of total " + str(redShip.offensiveMissileTotal))
+    print()
+    
+    print("Average Blue Defensive Missiles Fired: " + str(np.mean(BlueNumberDefensiveMissiles)) + " of total " + str(blueShip.defensiveMissileTotal))
+    print("Average Red Defensive Missiles Fired: " + str(np.mean(RedNumberDefensiveMissiles)) + " of total " + str(redShip.defensiveMissileTotal))
+    print()
+    
+    print("Average Blue ESSMs Fired: " + str(np.mean(BlueNumberESSMs)) + " of total " + str(blueShip.essmTotal))
+    print("Average Red ESSMs Fired: " + str(np.mean(RedNumberESSMs))+ " of total " + str(redShip.essmTotal))
+    print()
+    
+    print("Average Blue Sea RAMs Fired: " + str(np.mean(BlueNumberSeaRAMs)) + " of total " + str(blueShip.seaRamTotal))
+    print("Average Red Sea RAMs Fired: " + str(np.mean(RedNumberSeaRAMs)) + " of total " + str(redShip.seaRamTotal))
+    print()
+    
+    print("Average Blue CIWS Iterations Fired: " + str(np.mean(BlueNumberCIWS)) + " of total " + str(blueShip.ciwsTotal))
+    print("Average Red CIWS Iterations Fired: " + str(np.mean(RedNumberCIWS)) + " of total " + str(redShip.ciwsTotal))
+    print()
+    
+    print("Blue Offensive Missile Range: " + str(blueShip.offensiveMissileRange))
+    print("Red Offensive Missile Range: " + str(redShip.offensiveMissileRange))
+    print("Average Range Between Ships: " + str(np.mean(ShipRange)))
+    print()
+    
+    
     plt.scatter(iterationArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
+    plt.scatter(iterationArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
     plt.legend()
     #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
     plt.axes
@@ -198,58 +331,22 @@ if __name__ == "__main__":
     plt.title('Offensive Missiles Fired Per Iteration')
     plt.savefig('OffensiveMissilesIterations.png', dpi=600)
     plt.show()
+
+    
+    plt.scatter(iterationArray, ShipRange, color='black', label='Range Between Ships')
+    plt.plot(iterationArray, BlueShipOffensiveMissileRange, color='blue', label='Blue Offensive Missile Range')
+    plt.plot(iterationArray, RedShipOffensiveMissileRange, color='red', label='Red Offensive Missile Range')
+    plt.legend()
+    plt.axes
+    plt.xlabel('Iteration')
+    plt.ylabel('Range (NM)')
+    plt.title('Range Between Ships at the End of Each Iteration')
+    plt.savefig('RangeIterations.png', dpi=600)
+    plt.show()
   
-    
-    
-    '''plt.plot(simulationTimeArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
-    plt.plot(simulationTimeArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
-    plt.legend()
-    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
-    plt.axes
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('Offensive Missiles Left')
-    plt.title('Offensive Missiles Left in Ships\' Arsenals over Time')
-    plt.savefig('OffensiveMissilesOverTime.png', dpi=600)
-    plt.show()
-    plt.plot(simulationTimeArray, RedNumberDefensiveMissiles, color='red', label='Red Ship')
-    plt.plot(simulationTimeArray, BlueNumberDefensiveMissiles, color='blue', label='Blue Ship')
-    plt.legend()
-    #plt.ylim((0, 5 + max(redShip.defensiveMissileTotal, blueShip.defensiveMissileTotal)))
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('Defensive Missiles Left')
-    plt.title('Defensive Missiles Left in Ships\' Arsenals over Time')
-    plt.savefig('DefensiveMissilesOverTime.png', dpi=600)
-    plt.show()
-    plt.plot(simulationTimeArray, RedNumberESSMs, color='red', label='Red Ship')
-    plt.plot(simulationTimeArray, BlueNumberESSMs, color='blue', label='Blue Ship')
-    plt.legend()
-    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
-    plt.axes
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('ESSMs Left')
-    plt.title('ESSMs Left in Ships\' Arsenals over Time')
-    plt.savefig('ESSMs.png', dpi=600)
-    plt.show()
-    plt.plot(simulationTimeArray, RedNumberSeaRAMs, color='red', label='Red Ship')
-    plt.plot(simulationTimeArray, BlueNumberSeaRAMs, color='blue', label='Blue Ship')
-    plt.legend()
-    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
-    plt.axes
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('Sea RAMs Left')
-    plt.title('Sea RAMs Left in Ships\' Arsenals over Time')
-    plt.savefig('SeaRAMs.png', dpi=600)
-    plt.show()
-    plt.plot(simulationTimeArray, RedNumberCIWS, color='red', label='Red Ship')
-    plt.plot(simulationTimeArray, BlueNumberCIWS, color='blue', label='Blue Ship')
-    plt.legend()
-    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
-    plt.axes
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('CIWS Left')
-    plt.title('CIWS Left in Ships\' Arsenals over Time')
-    plt.savefig('CIWS.png', dpi=600)
-    plt.show()'''
+  
+  
+  
     
     
         

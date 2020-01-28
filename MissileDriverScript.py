@@ -38,7 +38,7 @@ if __name__ == "__main__":
     blueShip = Ship(sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0],
                 sheet1['ESSMs'][0], sheet1['Sea RAMs'][0], 
-                sheet1['CIWS (each has 3000 rounds)'][0],
+                sheet1['CIWS (each has 1500 rounds)'][0],
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][0], 
                 sheet1['Offensive Missile Success Probability'][0],
@@ -48,14 +48,19 @@ if __name__ == "__main__":
                 sheet1['ESSM Success Probability'][0],
                 sheet1['Sea RAM Success Probability'][0],
                 sheet1['CIWS Success Probability'][0],
-                sheet1['Satellite'][0], sheet1['Radar'][0], 
+                sheet1['Satellite'][0], sheet1['Radar'][0],
+                sheet1['Offensive Missile Salvo Size'][0],
+                sheet1['Defensive Missile Salvo Size'][0],
+                sheet1['ESSM Salvo Size'][0],
+                sheet1['Sea RAM Salvo Size'][0],
+                sheet1['CIWS Iteration Salvo Size'][0],
                 sheet1['Electronic Surveillance'][0], 
                 sheet1['Passive Sensors (Acoustic)'][0],
                 sheet1['UAV'][0], sheet1['USV'][0])
     redShip = Ship(sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['ESSMs'][1], sheet1['Sea RAMs'][1], 
-                sheet1['CIWS (each has 3000 rounds)'][1],
+                sheet1['CIWS (each has 1500 rounds)'][1],
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
@@ -65,10 +70,15 @@ if __name__ == "__main__":
                 sheet1['ESSM Success Probability'][1],
                 sheet1['Sea RAM Success Probability'][1],
                 sheet1['CIWS Success Probability'][1],
+                sheet1['Offensive Missile Salvo Size'][1],
+                sheet1['Defensive Missile Salvo Size'][1],
+                sheet1['ESSM Salvo Size'][1],
+                sheet1['Sea RAM Salvo Size'][1],
+                sheet1['CIWS Iteration Salvo Size'][1],
                 sheet1['Satellite'][1], sheet1['Radar'][1], 
                 sheet1['Electronic Surveillance'][1], 
                 sheet1['Passive Sensors (Acoustic)'][1],
-                sheet1['UAV'][1 ], sheet1['USV'][1])
+                sheet1['UAV'][1], sheet1['USV'][1])
     
     #Print Initialized Ships
     #redShip.printShip()
@@ -86,12 +96,14 @@ if __name__ == "__main__":
     BlueNumberSeaRAMs = []
     BlueNumberCIWS = []
     BlueShipOffensiveMissileRange = []
+    BlueCost = []
     RedNumberOffensiveMissiles = []
     RedNumberDefensiveMissiles = []
     RedNumberESSMs = []
     RedNumberSeaRAMs = []
     RedNumberCIWS = []
     RedShipOffensiveMissileRange = []
+    RedCost = []
     ShipRange = []
     simulationTimeArray.append(0)
     BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal)
@@ -100,12 +112,14 @@ if __name__ == "__main__":
     BlueNumberSeaRAMs.append(blueShip.seaRamTotal)
     BlueNumberCIWS.append(blueShip.ciwsTotal)
     BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+    BlueCost.append(0)
     RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal)
     RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal)
     RedNumberESSMs.append(redShip.essmTotal)
     RedNumberSeaRAMs.append(redShip.seaRamTotal)
     RedNumberCIWS.append(redShip.ciwsTotal)
     RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+    RedCost.append(0)
     ShipRange.append(abs(redShip.loc-blueShip.loc))
     
     #Run Missile Simulation
@@ -120,6 +134,8 @@ if __name__ == "__main__":
             break
         #stop simulation if both ships are out of ammunition(missiles)
         if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+            print("Both ships out of missiles")
+            print()
             break 
         #move ships if they are out of range
         blueShip.moveShip(redShip, animationFile, simulationTime)
@@ -146,12 +162,63 @@ if __name__ == "__main__":
         BlueNumberSeaRAMs.append(blueShip.seaRamTotal - blueShip.seaRamf)
         BlueNumberCIWS.append(blueShip.ciwsTotal - blueShip.ciwsf)
         BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+        BlueCost.append(blueShip.engagementCost())
         RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal - redShip.omf)
         RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal - redShip.dmf)
         RedNumberESSMs.append(redShip.essmTotal - redShip.essmf)
         RedNumberSeaRAMs.append(redShip.seaRamTotal - redShip.seaRamf)
         RedNumberCIWS.append(redShip.ciwsTotal - redShip.ciwsf)
         RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+        RedCost.append(redShip.engagementCost())
+        ShipRange.append(abs(redShip.loc-blueShip.loc))
+        #move all flying missiles forward to next state according to time and speed
+        blueShip.moveAllMissiles()
+        redShip.moveAllMissiles()
+        #increment the simulation time
+        simulationTime = simulationTime + 0.25
+        
+         #checking for exit conditions
+        #stop simulation if either ship is hit
+        if(redShip.hit or blueShip.hit):
+            break
+        #stop simulation if both ships are out of ammunition(missiles)
+        if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+            print("Both ships out of missiles")
+            print()
+            break 
+        #move ships if they are out of range
+        redShip.moveShip(blueShip, animationFile, simulationTime)
+        blueShip.moveShip(redShip, animationFile, simulationTime)
+        #determine if there are target ships or missiles for the ships
+        redShip.findShipTargets(blueShip)
+        redShip.findMissileTargets(blueShip)
+        blueShip.findShipTargets(redShip)
+        blueShip.findMissileTargets(redShip)
+        #check if any flying missiles have hit their targets
+        redShip.checkHitTargets(animationFile, simulationTime)
+        blueShip.checkHitTargets(animationFile, simulationTime)
+        #print the time elapsed in the simulation
+        print("Time Elapsed: " + str(simulationTime))
+        print('')
+        #print the ship summaries
+        blueShip.printShip()
+        redShip.printShip()
+        print('')
+        simulationTimeArray.append(simulationTime)
+        BlueNumberOffensiveMissiles.append(blueShip.offensiveMissileTotal - blueShip.omf)
+        BlueNumberDefensiveMissiles.append(blueShip.defensiveMissileTotal - blueShip.dmf)
+        BlueNumberESSMs.append(blueShip.essmTotal - blueShip.essmf)
+        BlueNumberSeaRAMs.append(blueShip.seaRamTotal - blueShip.seaRamf)
+        BlueNumberCIWS.append(blueShip.ciwsTotal - blueShip.ciwsf)
+        BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
+        BlueCost.append(blueShip.engagementCost())
+        RedNumberOffensiveMissiles.append(redShip.offensiveMissileTotal - redShip.omf)
+        RedNumberDefensiveMissiles.append(redShip.defensiveMissileTotal - redShip.dmf)
+        RedNumberESSMs.append(redShip.essmTotal - redShip.essmf)
+        RedNumberSeaRAMs.append(redShip.seaRamTotal - redShip.seaRamf)
+        RedNumberCIWS.append(redShip.ciwsTotal - redShip.ciwsf)
+        RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
+        RedCost.append(redShip.engagementCost())
         ShipRange.append(abs(redShip.loc-blueShip.loc))
         #move all flying missiles forward to next state according to time and speed
         redShip.moveAllMissiles()
@@ -225,6 +292,19 @@ if __name__ == "__main__":
     plt.title('Distance between Red and Blue Ships')
     plt.savefig('ShipDistance.png', dpi=600)
     plt.show()
+    
+    plt.plot(simulationTimeArray, BlueCost, color='blue', label='Blue')
+    plt.plot(simulationTimeArray, RedCost, color='red', label='Red')
+    plt.legend()
+    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
+    plt.axes
+    plt.xlabel('Simulation Time (minutes)')
+    plt.ylabel('Cost (USD)')
+    plt.title('Missile Engagement Cost over Time')
+    plt.savefig('Cost.png', dpi=600)
+    plt.show()
+    
+    
     
     
         

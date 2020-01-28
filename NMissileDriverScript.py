@@ -42,7 +42,7 @@ if __name__ == "__main__":
     initialBlue = [sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0],
                 sheet1['ESSMs'][0], sheet1['Sea RAMs'][0], 
-                sheet1['CIWS (each has 3000 rounds)'][0],
+                sheet1['CIWS (each has 1500 rounds)'][0],
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][0], 
                 sheet1['Offensive Missile Success Probability'][0],
@@ -52,6 +52,11 @@ if __name__ == "__main__":
                 sheet1['ESSM Success Probability'][0],
                 sheet1['Sea RAM Success Probability'][0],
                 sheet1['CIWS Success Probability'][0],
+                sheet1['Offensive Missile Salvo Size'][0],
+                sheet1['Defensive Missile Salvo Size'][0],
+                sheet1['ESSM Salvo Size'][0],
+                sheet1['Sea RAM Salvo Size'][0],
+                sheet1['CIWS Iteration Salvo Size'][0],
                 sheet1['Satellite'][0], sheet1['Radar'][0], 
                 sheet1['Electronic Surveillance'][0], 
                 sheet1['Passive Sensors (Acoustic)'][0],
@@ -60,7 +65,7 @@ if __name__ == "__main__":
     initialRed = [sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
                 sheet1['ESSMs'][1], sheet1['Sea RAMs'][1], 
-                sheet1['CIWS (each has 3000 rounds)'][1],
+                sheet1['CIWS (each has 1500 rounds)'][1],
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][1], 
                 sheet1['Offensive Missile Success Probability'][1],
@@ -70,6 +75,11 @@ if __name__ == "__main__":
                 sheet1['ESSM Success Probability'][1],
                 sheet1['Sea RAM Success Probability'][1],
                 sheet1['CIWS Success Probability'][1],
+                sheet1['Offensive Missile Salvo Size'][1],
+                sheet1['Defensive Missile Salvo Size'][1],
+                sheet1['ESSM Salvo Size'][1],
+                sheet1['Sea RAM Salvo Size'][1],
+                sheet1['CIWS Iteration Salvo Size'][1],
                 sheet1['Satellite'][1], sheet1['Radar'][1], 
                 sheet1['Electronic Surveillance'][1], 
                 sheet1['Passive Sensors (Acoustic)'][1],
@@ -85,6 +95,7 @@ if __name__ == "__main__":
     BlueNumberCIWS = []
     BlueShipOffensiveMissileRange = []
     BlueShipHit = []
+    BlueShipCost = []
     RedNumberOffensiveMissiles = []
     RedNumberDefensiveMissiles = []
     RedNumberESSMs = []
@@ -92,6 +103,7 @@ if __name__ == "__main__":
     RedNumberCIWS = []
     RedShipOffensiveMissileRange = []
     RedShipHit = []
+    RedShipCost = []
     ShipRange = []
     
 
@@ -112,10 +124,15 @@ if __name__ == "__main__":
                     initialBlue[15],
                     initialBlue[16],
                     initialBlue[17],
-                    initialBlue[18], initialBlue[19], 
-                    initialBlue[20], 
+                    initialBlue[18],
+                    initialBlue[19],
+                    initialBlue[20],
                     initialBlue[21],
-                    initialBlue[22], initialBlue[23])
+                    initialBlue[22],
+                    initialBlue[23], initialBlue[24], 
+                    initialBlue[25], 
+                    initialBlue[26],
+                    initialBlue[27], initialBlue[28])
         redShip = Ship(initialRed[0], initialRed[1], 
                     initialRed[2], initialRed[3],
                     initialRed[4], initialRed[5], 
@@ -129,10 +146,15 @@ if __name__ == "__main__":
                     initialRed[15],
                     initialRed[16],
                     initialRed[17],
-                    initialRed[18], initialRed[19], 
-                    initialRed[20], 
+                    initialRed[18],
+                    initialRed[19],
+                    initialRed[20],
                     initialRed[21],
-                    initialRed[22], initialRed[23])
+                    initialRed[22],
+                    initialRed[23], initialRed[24], 
+                    initialRed[25], 
+                    initialRed[26],
+                    initialRed[27], initialRed[28])
         
         #Print Initialized Ships
         #redShip.printShip()
@@ -156,20 +178,56 @@ if __name__ == "__main__":
             #stop simulation if both ships are out of ammunition(missiles)
             if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
                 break 
+            #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
+                #break
+            #move ships if they are out of range
+            redShip.moveShip(blueShip, animationFile, simulationTime)
+            blueShip.moveShip(redShip, animationFile, simulationTime)
+            
+            #determine if there are target ships or missiles for the ships
+            redShip.findShipTargets(blueShip)
+            redShip.findMissileTargets(blueShip)
+            blueShip.findShipTargets(redShip)
+            blueShip.findMissileTargets(redShip)
+        
+            #check if any flying missiles have hit their targets
+            redShip.checkHitTargets(animationFile, simulationTime)
+            blueShip.checkHitTargets(animationFile, simulationTime)
+
+            #move all flying missiles forward to next state according to time and speed
+            redShip.moveAllMissiles()
+            blueShip.moveAllMissiles()
+            
+            #increment the simulation time
+            simulationTime = simulationTime + 0.25
+            
+            if(redShip.hit or blueShip.hit):
+                break
+            #stop simulation if both ships are out of ammunition(missiles)
+            if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+                break 
+            #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
+                #break
             #move ships if they are out of range
             blueShip.moveShip(redShip, animationFile, simulationTime)
             redShip.moveShip(blueShip, animationFile, simulationTime)
+            
             #determine if there are target ships or missiles for the ships
             blueShip.findShipTargets(redShip)
             blueShip.findMissileTargets(redShip)
             redShip.findShipTargets(blueShip)
             redShip.findMissileTargets(blueShip)
+        
             #check if any flying missiles have hit their targets
             blueShip.checkHitTargets(animationFile, simulationTime)
             redShip.checkHitTargets(animationFile, simulationTime)
+            
+
             #move all flying missiles forward to next state according to time and speed
             blueShip.moveAllMissiles()
             redShip.moveAllMissiles()
+           
+            
             #increment the simulation time
             simulationTime = simulationTime + 0.25
         animationFile.close()
@@ -177,6 +235,10 @@ if __name__ == "__main__":
         print()
         blueShip.printShip()
         redShip.printShip()
+        #blueShip.printShipInputs(redShip)
+        if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+            print("Both ships out of missiles")
+            print()
         iterationArray.append(i)
         simulationTimeArray.append(simulationTime)
         BlueNumberOffensiveMissiles.append(blueShip.omf)
@@ -186,6 +248,7 @@ if __name__ == "__main__":
         BlueNumberCIWS.append(blueShip.ciwsf)
         BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
         BlueShipHit.append(blueShip.hit)
+        BlueShipCost.append(blueShip.engagementCost())
         RedNumberOffensiveMissiles.append(redShip.omf)
         RedNumberDefensiveMissiles.append(redShip.dmf)
         RedNumberESSMs.append(redShip.essmf)
@@ -193,6 +256,7 @@ if __name__ == "__main__":
         RedNumberCIWS.append(redShip.ciwsf)
         RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
         RedShipHit.append(redShip.hit)
+        RedShipCost.append(redShip.engagementCost())
         ShipRange.append(abs(blueShip.loc-redShip.loc))
         
     #Number of simulation runs Blue Ship Hit
@@ -211,6 +275,8 @@ if __name__ == "__main__":
     
     BothShipHitNumber = 0
     NoShipHitNumber = 0
+    BlueShipHitNumber = 0
+    RedShipHitNumber = 0
     for s in range(len(RedShipHit)):
         if(RedShipHit[s] == True and BlueShipHit[s] == True):
             BothShipHitNumber = BothShipHitNumber + 1
@@ -218,36 +284,52 @@ if __name__ == "__main__":
             NoShipHitNumber = NoShipHitNumber + 1
         
     BothShipHitProp = BothShipHitNumber/len(RedShipHit)
-    print("Proportion of Iterations Both Ships Hit (should be 0): " + str(BothShipHitProp))
+    print("Proportion of Iterations Both Ships Hit: " + str(BothShipHitProp))
     NoShipHitProp = NoShipHitNumber/len(RedShipHit)
     print("Proportion of Iterations No Ships Hit: " + str(NoShipHitProp))
     print()
     
     print("Average Blue Offensive Missiles Fired: " + str(np.mean(BlueNumberOffensiveMissiles)) + " of total " + str(blueShip.offensiveMissileTotal))
+    print("Standard Deviation of Blue Offensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberOffensiveMissiles))))
     print("Average Red Offensive Missiles Fired: " + str(np.mean(RedNumberOffensiveMissiles)) + " of total " + str(redShip.offensiveMissileTotal))
+    print("Standard Deviation of Red Offensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberOffensiveMissiles))))
     print()
     
     print("Average Blue Defensive Missiles Fired: " + str(np.mean(BlueNumberDefensiveMissiles)) + " of total " + str(blueShip.defensiveMissileTotal))
+    print("Standard Deviation of Blue Defensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberDefensiveMissiles))))
     print("Average Red Defensive Missiles Fired: " + str(np.mean(RedNumberDefensiveMissiles)) + " of total " + str(redShip.defensiveMissileTotal))
+    print("Standard Deviation of Red Defensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberDefensiveMissiles))))
     print()
     
     print("Average Blue ESSMs Fired: " + str(np.mean(BlueNumberESSMs)) + " of total " + str(blueShip.essmTotal))
+    print("Standard Deviation of Blue ESSMs Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberESSMs))))
     print("Average Red ESSMs Fired: " + str(np.mean(RedNumberESSMs))+ " of total " + str(redShip.essmTotal))
+    print("Standard Deviation of Red ESSMs Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberESSMs))))
     print()
     
     print("Average Blue Sea RAMs Fired: " + str(np.mean(BlueNumberSeaRAMs)) + " of total " + str(blueShip.seaRamTotal))
+    print("Standard Deviation of Blue Sea RAMs Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberSeaRAMs))))
     print("Average Red Sea RAMs Fired: " + str(np.mean(RedNumberSeaRAMs)) + " of total " + str(redShip.seaRamTotal))
+    print("Standard Deviation of Red Sea RAMs Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberSeaRAMs))))
     print()
     
     print("Average Blue CIWS Iterations Fired: " + str(np.mean(BlueNumberCIWS)) + " of total " + str(blueShip.ciwsTotal))
+    print("Standard Deviation of Blue CIWS Iterations Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberCIWS))))
     print("Average Red CIWS Iterations Fired: " + str(np.mean(RedNumberCIWS)) + " of total " + str(redShip.ciwsTotal))
+    print("Standard Deviation of Red CIWS Iterations Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberCIWS))))
     print()
     
     print("Blue Offensive Missile Range: " + str(blueShip.offensiveMissileRange))
     print("Red Offensive Missile Range: " + str(redShip.offensiveMissileRange))
-    print("Average Range Between Ships: " + str(np.mean(ShipRange)))
+    print("Average Range Between Ships at Simulation End: " + str(np.mean(ShipRange)))
+    print("Standard Deviation of Range Between Ships at Simulation End: " + '{:,.2f}'.format(np.sqrt(np.var(ShipRange))))
     print()
     
+    print("Average Blue Cost: " + '{:,.2f}'.format(np.mean(BlueShipCost)))
+    print("Standard Deviation of Blue Cost: " + '{:,.2f}'.format(np.sqrt(np.var(BlueShipCost))))
+    print("Average Red Cost: " + '{:,.2f}'.format(np.mean(RedShipCost)))
+    print("Standard Deviation of Red Cost: " + '{:,.2f}'.format(np.sqrt(np.var(RedShipCost))))
+    print()
     
     plt.scatter(iterationArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
     plt.scatter(iterationArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
@@ -310,6 +392,18 @@ if __name__ == "__main__":
     plt.title('Range Between Ships at the End of Each Iteration')
     plt.savefig('RangeIterations.png', dpi=600)
     plt.show()
+    
+    plt.scatter(iterationArray, BlueShipCost, color='blue', label='Blue')
+    plt.scatter(iterationArray, RedShipCost, color='red', label='Red')
+    plt.legend()
+    plt.axes
+    plt.xlabel('Iteration')
+    plt.ylabel('Cost in USD')
+    plt.title('Missile Engagement Cost')
+    plt.savefig('CostIterations.png', dpi=600)
+    plt.show()
+    
+  
   
   
   
