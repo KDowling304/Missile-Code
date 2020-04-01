@@ -5,7 +5,7 @@ Created on Fri Aug 23 10:51:24 2019
 
 @author: karadowling
 
-Sea RAM (Rolling Air Frame Missile) Class for both Red and Blue Ships
+SeaRAM (Rolling Air Frame Missile) Class for both Red and Blue Ships
 A Point Defense System
 Used when incoming offensive missile is 3-1 NM from its target
 Shoot-Shoot doctrine 
@@ -26,7 +26,7 @@ class SeaRAM():
        self.missileSpeed = missileSpeed
        #direction of missile flight
        self.directionalVelocity = None
-       #Sea RAM success probability
+       #SeaRAM success probability
        self.HitProb = seaRamHitProb
        
    #print current information about instance of a Defensive Missile

@@ -41,9 +41,9 @@ class Ship():
         #Extended NATO SeaSparrow Missiles (ESSM) starting in ship's arsenal (typically 32)
         self.essmTotal = essmTotal
         self.essmf = 0 #ESSMs fired (start with 0)
-        #Sea RAMs (Rolling Air Frame Missile) starting in ship's arsenal (typically 20)
+        #SeaRAMs (Rolling Air Frame Missile) starting in ship's arsenal (typically 20)
         self.seaRamTotal = seaRamTotal
-        self.seaRamf = 0 #Sea RAMs fired (start with 0)
+        self.seaRamf = 0 #SeaRAMs fired (start with 0)
         #CIWS - 30mm gun fires about 3000 rounds each time we use it 
         #(typically start with 3 times)
         self.ciwsTotal = ciwsTotal
@@ -69,7 +69,7 @@ class Ship():
         self.defHitProbP3 = defHitProbP3
         #ESSM success probability
         self.essmHitProb = essmHitProb
-        #Sea RAM success probability
+        #SeaRAM success probability
         self.seaRamHitProb = seaRamHitProb
         #CIWS success probability
         self.ciwsHitProb = ciwsHitProb
@@ -176,9 +176,9 @@ class Ship():
                     ['ESSM Inventory', self.essmTotal, otherShip.essmTotal],
                     ['ESSM Success Probability', self.essmHitProb, otherShip.essmHitProb],
                     ['ESSM Salvo Size', self.essmSS, otherShip.essmSS],
-                    ['Sea RAM Inventory', self.seaRamTotal, otherShip.seaRamTotal],
-                    ['Sea RAM Success Probability', self.seaRamHitProb, otherShip.seaRamHitProb],
-                    ['Sea RAM Salvo Size', self.seaRamSS, otherShip.seaRamSS],
+                    ['SeaRAM Inventory', self.seaRamTotal, otherShip.seaRamTotal],
+                    ['SeaRAM Success Probability', self.seaRamHitProb, otherShip.seaRamHitProb],
+                    ['SeaRAM Salvo Size', self.seaRamSS, otherShip.seaRamSS],
                     ['CIWS Inventory (1500 rounds each)', self.ciwsTotal, otherShip.ciwsTotal],
                     ['CIWS Iteration Success Probability', self.ciwsHitProb, otherShip.ciwsHitProb],
                     ['CIWS Iteration Salvo Size', self.ciwsSS, otherShip.ciwsSS],
@@ -206,7 +206,7 @@ class Ship():
         print(str(self.defensiveMissileTotal - self.dmf) + " defensive missiles left in ship's arsenal") 
         print(str(self.essmf) + " ESSMs already fired")
         print(str(self.essmTotal - self.essmf) + " ESSMs left in ship's arsenal") 
-        print(str(self.seaRamf) + " Sea RAMs already fired")
+        print(str(self.seaRamf) + " SeaRAMs already fired")
         print(str(self.seaRamTotal - self.seaRamf) + " Sea RAMs left in ship's arsenal") 
         print(str(self.ciwsf) + " sets of 3000 CIWS bullets already fired")
         print(str(self.ciwsTotal - self.ciwsf) + " sets of 3000 CIWS bullets left in ship's arsenal") 
@@ -298,9 +298,11 @@ class Ship():
                     #only need to check if flying because simulation ends when a ship is hit
                     #therefore either the offensive missile was unsuccessful already or hasn't been shot at
                     if(missile.flying == True):
-                        shootCount = shootCount + 1       
+                        shootCount = shootCount + 1     
+                #print(shootCount)
                 if(shootCount < self.offensiveMissileSS):
                     self.launchOffensiveMissile(otherShip)
+                #print(self.offensiveMissileSS)
   
                             
                 
@@ -340,7 +342,7 @@ class Ship():
                 #determine how we shoot based on where incoming missile is
                 #less than 5NM we are using Point Defense System
                 #Extended NATO Seasparrow Missile (ESSM) from 3-5 NM
-                #Sea RAM (Rolling Air Frame Missile) from 1-3 NM
+                #SeaRAM (Rolling Air Frame Missile) from 1-3 NM
                 #CIWS from 0-1 NM
                 #Also use Soft Kill ECM (Decoy, Jamming)
                 if(incomingTargetDistance <= 5 and incomingTargetDistance > 0):
@@ -348,6 +350,8 @@ class Ship():
                 #simplified shoot, look, shoot method with SM-2
                 elif(incomingTargetDistance <=20 and incomingTargetDistance > 5):
                     if(shootCount < self.defensiveMissileSS):
+                        #s = 0
+                        #for s in range(self.defensiveMissileSS - shootCount):
                         self.launchDefensiveMissile(incomingMissile)
                 #simplified shoot, shoot, look, shoot method with SM-2
                 elif(incomingTargetDistance <=100 and incomingTargetDistance > 20):
@@ -366,11 +370,16 @@ class Ship():
                     if(targetMissile == essm.target):
                         shootCount = shootCount + 1
             if(shootCount < self.essmSS):
-                  #can only launch missile if there are missiles left to be fired
-                  if(self.essmTotal - self.essmf > 0):
-                      self.essmList[self.essmf].launchMissile(targetMissile)
-                      self.essmf = self.essmf + 1
-        #Sea RAM (Rolling Air Frame Missile) from 1-3 NM
+                    #can only launch missile if there are missiles left to be fired
+                    #s = 0
+                    #for s in range(self.essmSS - shootCount):
+                    #if(self.essmTotal - self.essmf > 0):
+                        #self.essmList[self.essmf].launchMissile(targetMissile)
+                        #self.essmf = self.essmf + 1
+                    if(self.essmTotal - self.essmf > 0):
+                        self.essmList[self.essmf].launchMissile(targetMissile)
+                        self.essmf = self.essmf + 1
+        #SeaRAM (Rolling Air Frame Missile) from 1-3 NM
         if(incomingTargetDistance <= 3 and incomingTargetDistance > 1):
             shootCount = 0
             for seaRam in self.seaRamList:
@@ -378,10 +387,16 @@ class Ship():
                     if(targetMissile == seaRam.target):
                         shootCount = shootCount + 1
             if(shootCount < self.seaRamSS):
-                  #can only launch missile if there are missiles left to be fired
-                  if(self.seaRamTotal - self.seaRamf > 0):
-                      self.seaRamList[self.seaRamf].launchMissile(targetMissile)
-                      self.seaRamf = self.seaRamf + 1
+                #s = 0
+                #for s in range(self.defensiveMissileSS - shootCount):
+                    #can only launch missile if there are missiles left to be fired
+                    #if(self.seaRamTotal - self.seaRamf > 0):
+                        #self.seaRamList[self.seaRamf].launchMissile(targetMissile)
+                        #self.seaRamf = self.seaRamf + 1
+                #can only launch missile if there are missiles left to be fired
+                if(self.seaRamTotal - self.seaRamf > 0):
+                    self.seaRamList[self.seaRamf].launchMissile(targetMissile)
+                    self.seaRamf = self.seaRamf + 1
         #CIWS from 0-1 NM
         if(incomingTargetDistance <= 1 and incomingTargetDistance > 0):
             shootCount = 0
@@ -390,10 +405,16 @@ class Ship():
                     if(targetMissile == ciws.target):
                         shootCount = shootCount + 1
             if(shootCount < self.ciwsSS):
-                  #can only fire bullets if there are bullets left
-                  if(self.ciwsTotal - self.ciwsf > 0):
-                      self.ciwsList[self.ciwsf].fireBulletRounds(targetMissile)
-                      self.ciwsf = self.ciwsf + 1
+                #s = 0
+                #for s in range(self.defensiveMissileSS - shootCount):
+                    #can only fire bullets if there are bullets left
+                    #if(self.ciwsTotal - self.ciwsf > 0):
+                        #self.ciwsList[self.ciwsf].fireBulletRounds(targetMissile)
+                        #self.ciwsf = self.ciwsf + 1
+                #can only fire bullets if there are bullets left
+                if(self.ciwsTotal - self.ciwsf > 0):
+                    self.ciwsList[self.ciwsf].fireBulletRounds(targetMissile)
+                    self.ciwsf = self.ciwsf + 1
         #Also use Soft Kill ECM (Decoy, Jamming)
     
     #called by findMissileTargets when wanting to launch a defensive missile               
@@ -447,10 +468,10 @@ class Ship():
         if self.hit == True :
             currentCost = currentCost + 2000000000
         if self.offensiveMissileRange >= 300:
-            currentCost = currentCost + self.omf * 2000000
+            currentCost = currentCost + self.omf * 3000000
         else:
-            currentCost = currentCost + self.omf * 1000000
-        currentCost = currentCost + self.dmf * 1000000
+            currentCost = currentCost + self.omf * 1500000
+        currentCost = currentCost + self.dmf * 1500000
         currentCost = currentCost + self.essmf * 956000
         currentCost = currentCost + self.seaRamf * 998000
         currentCost = currentCost + self.ciwsf * 200000

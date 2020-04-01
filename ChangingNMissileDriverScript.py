@@ -42,7 +42,7 @@ if __name__ == "__main__":
     #initial data blueShip
     initialBlue = [sheet1['Ship\'s Name'][0], sheet1['Location (NM) 1D scale'][0], 
                 sheet1['Offensive Missiles'][0], sheet1['Defensive Missiles'][0],
-                sheet1['ESSMs'][0], sheet1['Sea RAMs'][0], 
+                sheet1['ESSMs'][0], sheet1['SeaRAMs'][0], 
                 sheet1['CIWS (each has 1500 rounds)'][0],
                 sheet1['Ship Speed (kn)'][0], sheet1['Missile Speed (kn)'][0], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][0], 
@@ -51,12 +51,12 @@ if __name__ == "__main__":
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][0],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][0],
                 sheet1['ESSM Success Probability'][0],
-                sheet1['Sea RAM Success Probability'][0],
+                sheet1['SeaRAM Success Probability'][0],
                 sheet1['CIWS Success Probability'][0],
                 sheet1['Offensive Missile Salvo Size'][0],
                 sheet1['Defensive Missile Salvo Size'][0],
                 sheet1['ESSM Salvo Size'][0],
-                sheet1['Sea RAM Salvo Size'][0],
+                sheet1['SeaRAM Salvo Size'][0],
                 sheet1['CIWS Iteration Salvo Size'][0],
                 sheet1['Satellite'][0], sheet1['Radar'][0], 
                 sheet1['Electronic Surveillance'][0], 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     
     initialRed = [sheet1['Ship\'s Name'][1], sheet1['Location (NM) 1D scale'][1], 
                 sheet1['Offensive Missiles'][1], sheet1['Defensive Missiles'][1], 
-                sheet1['ESSMs'][1], sheet1['Sea RAMs'][1], 
+                sheet1['ESSMs'][1], sheet1['SeaRAMs'][1], 
                 sheet1['CIWS (each has 1500 rounds)'][1],
                 sheet1['Ship Speed (kn)'][1], sheet1['Missile Speed (kn)'][1], 
                 timeStep, sheet1['Offensive Missile Range (NM)'][1], 
@@ -74,12 +74,12 @@ if __name__ == "__main__":
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 20-5 NM from its target - phase 2)'][1],
                 sheet1['Defensive Missile Success Probability (if target offensive missile is 5-1 NM from its target - phase 3)'][1],
                 sheet1['ESSM Success Probability'][1],
-                sheet1['Sea RAM Success Probability'][1],
+                sheet1['SeaRAM Success Probability'][1],
                 sheet1['CIWS Success Probability'][1],
                 sheet1['Offensive Missile Salvo Size'][1],
                 sheet1['Defensive Missile Salvo Size'][1],
                 sheet1['ESSM Salvo Size'][1],
-                sheet1['Sea RAM Salvo Size'][1],
+                sheet1['SeaRAM Salvo Size'][1],
                 sheet1['CIWS Iteration Salvo Size'][1],
                 sheet1['Satellite'][1], sheet1['Radar'][1], 
                 sheet1['Electronic Surveillance'][1], 
@@ -270,65 +270,76 @@ if __name__ == "__main__":
             #simulation ends when certain time passes to ensure no infinite loop can occur
             animationFile = open("animationFile.txt", "w")
             while(simulationTime <= 1000):
-                #checking for exit conditions
-                #stop simulation if either ship is hit
-                if(redShip.hit or blueShip.hit):
-                    break
-                #stop simulation if both ships are out of ammunition(missiles)
-                if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
-                    break 
-                #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
-                    #break
-                #move ships if they are out of range
-                redShip.moveShip(blueShip, animationFile, simulationTime)
-                blueShip.moveShip(redShip, animationFile, simulationTime)
                 
-                #determine if there are target ships or missiles for the ships
-                redShip.findShipTargets(blueShip)
-                redShip.findMissileTargets(blueShip)
-                blueShip.findShipTargets(redShip)
-                blueShip.findMissileTargets(redShip)
-            
-                #check if any flying missiles have hit their targets
-                redShip.checkHitTargets(animationFile, simulationTime)
-                blueShip.checkHitTargets(animationFile, simulationTime)
-    
-                #move all flying missiles forward to next state according to time and speed
-                redShip.moveAllMissiles()
-                blueShip.moveAllMissiles()
+                #determines whether Blue or Red goes first each time step
+                BlueFirst = np.random.binomial(1,0.5)
+                #print(BlueFirst)
+
+                if (BlueFirst == 1):
+                    #checking for exit conditions
+                    #stop simulation if either ship is hit
+                    if(redShip.hit or blueShip.hit):
+                        break
+                    #stop simulation if both ships are out of ammunition(missiles)
+                    if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+                        break 
+                    #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
+                        #break
+                    #move ships if they are out of range
+                    blueShip.moveShip(redShip, animationFile, simulationTime)
+                    redShip.moveShip(blueShip, animationFile, simulationTime)
+                    
+                    #determine if there are target ships or missiles for the ships
+                    blueShip.findShipTargets(redShip)
+                    blueShip.findMissileTargets(redShip)
+                    redShip.findShipTargets(blueShip)
+                    redShip.findMissileTargets(blueShip)
                 
-                #increment the simulation time
-                simulationTime = simulationTime + 0.25
+                    #check if any flying missiles have hit their targets
+                    blueShip.checkHitTargets(animationFile, simulationTime)
+                    redShip.checkHitTargets(animationFile, simulationTime)
+                    
+        
+                    #move all flying missiles forward to next state according to time and speed
+                    blueShip.moveAllMissiles()
+                    redShip.moveAllMissiles()
+                   
+                    
+                    #increment the simulation time
+                    simulationTime = simulationTime + 0.25
                 
-                if(redShip.hit or blueShip.hit):
-                    break
-                #stop simulation if both ships are out of ammunition(missiles)
-                if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
-                    break 
-                #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
-                    #break
-                #move ships if they are out of range
-                blueShip.moveShip(redShip, animationFile, simulationTime)
-                redShip.moveShip(blueShip, animationFile, simulationTime)
+                else:
+                    #checking for exit conditions
+                    #stop simulation if either ship is hit
+                    if(redShip.hit or blueShip.hit):
+                        break
+                    #stop simulation if both ships are out of ammunition(missiles)
+                    if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
+                        break 
+                    #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
+                        #break
+                    #move ships if they are out of range
+                    redShip.moveShip(blueShip, animationFile, simulationTime)
+                    blueShip.moveShip(redShip, animationFile, simulationTime)
+                    
+                    #determine if there are target ships or missiles for the ships
+                    redShip.findShipTargets(blueShip)
+                    redShip.findMissileTargets(blueShip)
+                    blueShip.findShipTargets(redShip)
+                    blueShip.findMissileTargets(redShip)
                 
-                #determine if there are target ships or missiles for the ships
-                blueShip.findShipTargets(redShip)
-                blueShip.findMissileTargets(redShip)
-                redShip.findShipTargets(blueShip)
-                redShip.findMissileTargets(blueShip)
-            
-                #check if any flying missiles have hit their targets
-                blueShip.checkHitTargets(animationFile, simulationTime)
-                redShip.checkHitTargets(animationFile, simulationTime)
+                    #check if any flying missiles have hit their targets
+                    redShip.checkHitTargets(animationFile, simulationTime)
+                    blueShip.checkHitTargets(animationFile, simulationTime)
+        
+                    #move all flying missiles forward to next state according to time and speed
+                    redShip.moveAllMissiles()
+                    blueShip.moveAllMissiles()
+                    
+                    #increment the simulation time
+                    simulationTime = simulationTime + 0.25
+                    
                 
-    
-                #move all flying missiles forward to next state according to time and speed
-                blueShip.moveAllMissiles()
-                redShip.moveAllMissiles()
-               
-                
-                #increment the simulation time
-                simulationTime = simulationTime + 0.25
             animationFile.close()
             #print("Iteration: " + str(i + 1))
             #print()
@@ -509,14 +520,14 @@ if __name__ == "__main__":
     plt.savefig('ESSMChangingBlueSalvoSize.png', dpi=600, bbox_inches='tight')
     plt.show()
     
-    #Graph of Average Sea RAMs Fired
+    #Graph of Average SeaRAMs Fired
     plt.plot(offensiveMissileSalvoSize, AvgBlueSMFArr, color='blue', label='Blue')
     plt.plot(offensiveMissileSalvoSize, AvgRedSMFArr, color='red', label='Red')
     plt.legend()
     plt.xlabel('Blue Offensive Missile Salvo Size')
-    plt.ylabel('Average Sea RAMs Fired')
+    plt.ylabel('Average SeaRAMs Fired')
     plt.locator_params(axis="x", integer=True, tight=True)
-    plt.title('Average Number Sea RAMs Fired\nwhen Changing Blue Offensive Missile Salvo Size\n(Red Offensive Missile Salvo Size Set at 4)')
+    plt.title('Average Number SeaRAMs Fired\nwhen Changing Blue Offensive Missile Salvo Size\n(Red Offensive Missile Salvo Size Set at 4)')
     plt.savefig('SeaRAMChangingBlueSalvoSize.png', dpi=600, bbox_inches='tight')
     plt.show()
     
