@@ -175,7 +175,6 @@ if __name__ == "__main__":
         while(simulationTime <= 1000):
             #determines whether Blue or Red goes first each time step
             BlueFirst = np.random.binomial(1,0.5)
-            #print(BlueFirst)
             
             if(BlueFirst == 1):
                 if(blueShip.hit or redShip.hit):
@@ -183,8 +182,7 @@ if __name__ == "__main__":
                 #stop simulation if both ships are out of ammunition(missiles)
                 if(blueShip.outOfMissiles() and redShip.outOfMissiles()):
                     break 
-                #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
-                    #break
+                
                 #move ships if they are out of range
                 blueShip.moveShip(redShip, animationFile, simulationTime)
                 redShip.moveShip(blueShip, animationFile, simulationTime)
@@ -215,8 +213,7 @@ if __name__ == "__main__":
                 #stop simulation if both ships are out of ammunition(missiles)
                 if(redShip.outOfMissiles() and blueShip.outOfMissiles()):
                     break 
-                #if(redShip.offensiveMissileTotal - redShip.omf <= 0):
-                    #break
+                
                 #move ships if they are out of range
                 redShip.moveShip(blueShip, animationFile, simulationTime)
                 blueShip.moveShip(redShip, animationFile, simulationTime)
@@ -231,7 +228,8 @@ if __name__ == "__main__":
                 redShip.checkHitTargets(animationFile, simulationTime)
                 blueShip.checkHitTargets(animationFile, simulationTime)
     
-                #move all flying missiles forward to next state according to time and speed
+                #move all flying missiles forward to next state according to 
+                #time and speed
                 redShip.moveAllMissiles()
                 blueShip.moveAllMissiles()
                 
@@ -266,7 +264,7 @@ if __name__ == "__main__":
         RedShipHit.append(redShip.hit)
         RedShipCost.append(redShip.engagementCost())
         ShipRange.append(abs(blueShip.loc-redShip.loc))
-        
+
     #Number of simulation runs Blue Ship Hit
     BlueShipHitNumber = BlueShipHit.count(True)
     #print(BlueShipHitNumber)
@@ -745,7 +743,7 @@ if __name__ == "__main__":
     fig.savefig('boxPlotShipRange.png', bbox_inches='tight', dpi=600)
     plt.show()
     
-    print(BlueNumberESSMs)
+    print(blueShip.printShipInputs(redShip))
     
   
   

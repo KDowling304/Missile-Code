@@ -289,14 +289,16 @@ class Ship():
                     targetingData = True
         
         #if targeting data is present
-        #if ship is in range, has it been shot at?, decide to shoot again or not                     
+        #if ship is in range, has it been shot at?, decide to shoot again/not                     
         #print(targetingData)
         if(targetingData):
             if (shipDistance <= self.offensiveMissileRange):
                 shootCount = 0
                 for missile in self.offensiveMissileList:
-                    #only need to check if flying because simulation ends when a ship is hit
-                    #therefore either the offensive missile was unsuccessful already or hasn't been shot at
+                    #only need to check if flying because simulation ends 
+                    #when a ship is hit
+                    #therefore either the offensive missile was unsuccessful 
+                    #already or hasn't been shot at
                     if(missile.flying == True):
                         shootCount = shootCount + 1     
                 #print(shootCount)
@@ -373,9 +375,9 @@ class Ship():
                     #can only launch missile if there are missiles left to be fired
                     #s = 0
                     #for s in range(self.essmSS - shootCount):
-                    #if(self.essmTotal - self.essmf > 0):
-                        #self.essmList[self.essmf].launchMissile(targetMissile)
-                        #self.essmf = self.essmf + 1
+                        #if(self.essmTotal - self.essmf > 0):
+                            #self.essmList[self.essmf].launchMissile(targetMissile)
+                            #self.essmf = self.essmf + 1
                     if(self.essmTotal - self.essmf > 0):
                         self.essmList[self.essmf].launchMissile(targetMissile)
                         self.essmf = self.essmf + 1
@@ -476,6 +478,19 @@ class Ship():
         currentCost = currentCost + self.seaRamf * 998000
         currentCost = currentCost + self.ciwsf * 200000
         return(currentCost)
+        
+    def missileCost(self):
+        missileCCost = 0
+        if self.offensiveMissileRange >= 300:
+            missileCCost = missileCCost + self.omf * 3000000
+        else:
+            missileCCost = missileCCost + self.omf * 1500000
+        missileCCost = missileCCost + self.dmf * 1500000
+        missileCCost = missileCCost + self.essmf * 956000
+        missileCCost = missileCCost + self.seaRamf * 998000
+        missileCCost = missileCCost + self.ciwsf * 200000
+        return(missileCCost)
+  
   
         
             

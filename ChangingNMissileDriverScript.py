@@ -132,7 +132,11 @@ if __name__ == "__main__":
     AvgRedCostArr = []
     StdDevRedCostArr = []
     
-
+    AvgBlueMissileCostArr = []
+    StdDevBlueMissileCostArr = []
+    AvgRedMissileCostArr = []
+    StdDevRedMissileCostArr = []
+    
     
     for offSavSize in offensiveMissileSalvoSize:
        
@@ -149,6 +153,7 @@ if __name__ == "__main__":
         BlueShipOffensiveMissileRange = []
         BlueShipHit = []
         BlueShipCost = []
+        BlueMissileCost = []
         RedNumberOffensiveMissiles = []
         RedNumberDefensiveMissiles = []
         RedNumberESSMs = []
@@ -157,6 +162,7 @@ if __name__ == "__main__":
         RedShipOffensiveMissileRange = []
         RedShipHit = []
         RedShipCost = []
+        RedMissileCost = []
         ShipRange = []
         
         blueShip = Ship(initialBlue[0], initialBlue[1], 
@@ -358,6 +364,7 @@ if __name__ == "__main__":
             BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
             BlueShipHit.append(blueShip.hit)
             BlueShipCost.append(blueShip.engagementCost())
+            BlueMissileCost.append(blueShip.missileCost())
             RedNumberOffensiveMissiles.append(redShip.omf)
             RedNumberDefensiveMissiles.append(redShip.dmf)
             RedNumberESSMs.append(redShip.essmf)
@@ -366,6 +373,7 @@ if __name__ == "__main__":
             RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
             RedShipHit.append(redShip.hit)
             RedShipCost.append(redShip.engagementCost())
+            RedMissileCost.append(redShip.missileCost())
             ShipRange.append(abs(blueShip.loc-redShip.loc))
             
         #Number of simulation runs Blue Ship Hit
@@ -433,6 +441,11 @@ if __name__ == "__main__":
         StdDevBlueCostArr.append(np.sqrt(np.var(BlueShipCost)))
         AvgRedCostArr.append(np.mean(RedShipCost))
         StdDevRedCostArr.append(np.sqrt(np.var(RedShipCost)))
+        
+        AvgBlueMissileCostArr.append(np.mean(BlueMissileCost))
+        StdDevBlueMissileCostArr.append(np.var(BlueMissileCost))
+        AvgRedMissileCostArr.append(np.mean(RedMissileCost))
+        StdDevRedMissileCostArr.append(np.var(RedMissileCost))
        
         
     #Graph of Proportion of Iterations Ship Hit
@@ -485,6 +498,17 @@ if __name__ == "__main__":
     plt.locator_params(axis="x", integer=True, tight=True)
     plt.title('Average Missile Engagement Cost\nwhen Changing Blue Offensive Missile Salvo Size\n(Red Offensive Missile Salvo Size Set at 4)', pad=15)
     plt.savefig('CostChangingBlueSalvoSize.png', dpi=600, bbox_inches='tight')
+    plt.show()
+    
+    #Graph of Average Cost of Missiles Fired
+    plt.plot(offensiveMissileSalvoSize, AvgBlueCostArr, color='blue', label='Blue')
+    plt.plot(offensiveMissileSalvoSize, AvgRedCostArr, color='red', label='Red')
+    plt.legend()
+    plt.xlabel('Blue Offensive Missile Salvo Size')
+    plt.ylabel('Cost in USD')
+    plt.locator_params(axis="x", integer=True, tight=True)
+    plt.title('Average Cost of Missiles Fired\nwhen Changing Blue Offensive Missile Salvo Size\n(Red Offensive Missile Salvo Size Set at 4)', pad=15)
+    plt.savefig('MissileCostChangingBlueSalvoSize.png', dpi=600, bbox_inches='tight')
     plt.show()
     
     #Graph of Average Offensive Missiles Fired

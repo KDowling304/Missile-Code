@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 sheet1['UAV'][1 ], sheet1['USV'][1]]
     
     offensiveMissileSalvoSize = list(range(1, sheet1['Offensive Missiles'][0] + 1))
-    offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
+    offensiveMissileSuccessProbability = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]
     
     #offensiveMissileSalvoSize = list(range(1, 5))
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9]
@@ -142,6 +142,11 @@ if __name__ == "__main__":
     StdDevBlueCost2 = []
     AvgRedCost2 = []
     StdDevRedCost2 = []
+    
+    AvgBlueMissileCost2 = []
+    StdDevBlueMissileCost2 = []
+    AvgRedMissileCost2 = []
+    StdDevRedMissileCost2 = []
     
     
     for offMiss in offensiveMissileSuccessProbability:
@@ -191,6 +196,11 @@ if __name__ == "__main__":
         AvgRedCostArr = []
         StdDevRedCostArr = []
         
+        AvgBlueMissileCostArr = []
+        StdDevBlueMissileCostArr = []
+        AvgRedMissileCostArr = []
+        StdDevRedMissileCostArr = []
+        
     
         
         for offSavSize in offensiveMissileSalvoSize:
@@ -208,6 +218,7 @@ if __name__ == "__main__":
             BlueShipOffensiveMissileRange = []
             BlueShipHit = []
             BlueShipCost = []
+            BlueShipMissileCost = []
             RedNumberOffensiveMissiles = []
             RedNumberDefensiveMissiles = []
             RedNumberESSMs = []
@@ -216,6 +227,7 @@ if __name__ == "__main__":
             RedShipOffensiveMissileRange = []
             RedShipHit = []
             RedShipCost = []
+            RedShipMissileCost = []
             ShipRange = []
             
             blueShip = Ship(initialBlue[0], initialBlue[1], 
@@ -224,7 +236,7 @@ if __name__ == "__main__":
                             initialBlue[6],
                             initialBlue[7], initialBlue[8], 
                             initialBlue[9], initialBlue[10], 
-                            initialBlue[11],
+                            offMiss,
                             initialBlue[12],
                             initialBlue[13],
                             initialBlue[14],
@@ -275,7 +287,7 @@ if __name__ == "__main__":
                                 initialBlue[6],
                                 initialBlue[7], initialBlue[8], 
                                 initialBlue[9], initialBlue[10], 
-                                initialBlue[11],
+                                offMiss,
                                 initialBlue[12],
                                 initialBlue[13],
                                 initialBlue[14],
@@ -413,6 +425,7 @@ if __name__ == "__main__":
                 BlueShipOffensiveMissileRange.append(blueShip.offensiveMissileRange)
                 BlueShipHit.append(blueShip.hit)
                 BlueShipCost.append(blueShip.engagementCost())
+                BlueShipMissileCost.append(blueShip.missileCost())
                 RedNumberOffensiveMissiles.append(redShip.omf)
                 RedNumberDefensiveMissiles.append(redShip.dmf)
                 RedNumberESSMs.append(redShip.essmf)
@@ -421,6 +434,7 @@ if __name__ == "__main__":
                 RedShipOffensiveMissileRange.append(redShip.offensiveMissileRange)
                 RedShipHit.append(redShip.hit)
                 RedShipCost.append(redShip.engagementCost())
+                RedShipMissileCost.append(redShip.missileCost())
                 ShipRange.append(abs(blueShip.loc-redShip.loc))
                 
             #Number of simulation runs Blue Ship Hit
@@ -488,6 +502,12 @@ if __name__ == "__main__":
             StdDevBlueCostArr.append(np.sqrt(np.var(BlueShipCost)))
             AvgRedCostArr.append(np.mean(RedShipCost))
             StdDevRedCostArr.append(np.sqrt(np.var(RedShipCost)))
+            
+            AvgBlueMissileCostArr.append(np.mean(BlueShipMissileCost))
+            StdDevBlueMissileCostArr.append(np.sqrt(np.var(BlueShipMissileCost)))
+            AvgRedMissileCostArr.append(np.mean(RedShipMissileCost))
+            StdDevRedMissileCostArr.append(np.sqrt(np.var(RedShipMissileCost)))
+            print(offSavSize)
            
         #Number of simulation runs Blue Ship Hit
         BlueShipHitNumber2.append(BlueShipHitNumberArr)
@@ -541,13 +561,18 @@ if __name__ == "__main__":
         StdDevBlueCost2.append(StdDevBlueCostArr)
         AvgRedCost2.append(AvgRedCostArr)
         StdDevRedCost2.append(StdDevRedCostArr) 
+        
+        AvgBlueMissileCost2.append(AvgBlueMissileCostArr)
+        StdDevBlueMissileCost2.append(StdDevBlueMissileCostArr)
+        AvgRedMissileCost2.append(AvgRedMissileCostArr)
+        StdDevRedMissileCost2.append(StdDevRedMissileCostArr) 
     
     
     
     
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     AvgBlueCost2 = np.array(AvgBlueCost2) 
     fig, ax = plt.subplots()
     im, cbar = heatmap(AvgBlueCost2, offMSPString, 
@@ -556,14 +581,29 @@ if __name__ == "__main__":
     #texts = annotate_heatmap(im, valfmt="${x:.1f} USD")
     ax.set_xlabel("Blue Offensive Missile Salvo Size")
     ax.set_ylabel("Blue Offensive Missile Success Probability")
-    ax.set_title("Blue Ship Cost (USD)")
+    ax.set_title("Cost of Engagement for Blue (USD)")
     fig.tight_layout()
     plt.savefig('CostChangingBlueSuccessProbAndSalvoSize.png', dpi=600, bbox_inches='tight')
-    plt.show()    
+    plt.show()   
+    
+    #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
+    AvgBlueMissileCost2 = np.array(AvgBlueMissileCost2) 
+    fig, ax = plt.subplots()
+    im, cbar = heatmap(AvgBlueMissileCost2, offMSPString, 
+                       offensiveMissileSalvoSize, ax=ax,
+                   cmap="YlGnBu", cbarlabel="Cost (USD)")
+    #texts = annotate_heatmap(im, valfmt="${x:.1f} USD")
+    ax.set_xlabel("Blue Offensive Missile Salvo Size")
+    ax.set_ylabel("Blue Offensive Missile Success Probability")
+    ax.set_title("Blue Missile Cost (USD)")
+    fig.tight_layout()
+    plt.savefig('MissileCostChangingBlueSuccessProbAndSalvoSize.png', dpi=600, bbox_inches='tight')
+    plt.show() 
     
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     AvgRedCost2 = np.array(AvgRedCost2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(AvgRedCost2, offMSPString, 
@@ -572,13 +612,28 @@ if __name__ == "__main__":
     #texts = annotate_heatmap(im, valfmt="${x:.1f} USD")
     ax.set_xlabel("Blue Offensive Missile Salvo Size")
     ax.set_ylabel("Blue Offensive Missile Success Probability")
-    ax.set_title("Red Ship Cost (USD)")
+    ax.set_title("Cost of Engagement for Red (USD)")
     fig.tight_layout()
     plt.savefig('RedCostChangingBlueSuccessProbAndSalvoSize.png', dpi=600, bbox_inches='tight')
-    plt.show()    
+    plt.show()   
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
+    AvgRedMissileCost2 = np.array(AvgRedMissileCost2)
+    fig, ax = plt.subplots()
+    im, cbar = heatmap(AvgRedMissileCost2, offMSPString, 
+                       offensiveMissileSalvoSize, ax=ax,
+                   cmap="YlOrRd", cbarlabel="Cost (USD)")
+    #texts = annotate_heatmap(im, valfmt="${x:.1f} USD")
+    ax.set_xlabel("Blue Offensive Missile Salvo Size")
+    ax.set_ylabel("Blue Offensive Missile Success Probability")
+    ax.set_title("Red Missile Cost (USD)")
+    fig.tight_layout()
+    plt.savefig('RedMissileCostChangingBlueSuccessProbAndSalvoSize.png', dpi=600, bbox_inches='tight')
+    plt.show()  
+    
+    #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     BlueShipHitProp2 = np.array(BlueShipHitProp2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(BlueShipHitProp2, offMSPString, 
@@ -593,7 +648,7 @@ if __name__ == "__main__":
     plt.show()    
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     RedShipHitProp2 = np.array(RedShipHitProp2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(RedShipHitProp2, offMSPString, 
@@ -608,7 +663,7 @@ if __name__ == "__main__":
     plt.show()  
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     BothShipHitProp2 = np.array(BothShipHitProp2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(BothShipHitProp2, offMSPString, 
@@ -623,7 +678,7 @@ if __name__ == "__main__":
     plt.show()  
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     NoShipHitProp2 = np.array(NoShipHitProp2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(NoShipHitProp2, offMSPString, 
@@ -638,12 +693,12 @@ if __name__ == "__main__":
     plt.show()  
     
     #offensiveMissileSuccessProbability = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1]
-    offMSPString = ['0', '1/9', '2/9', '3/9', '4/9', '5/9', '6/9', '7/9', '8/9', '1']
+    offMSPString = ['0', '1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '1']
     AvgRange2 = np.array(AvgRange2)
     fig, ax = plt.subplots()
     im, cbar = heatmap(AvgRange2, offMSPString, 
                        offensiveMissileSalvoSize, ax=ax,
-                   cmap="Purples", cbarlabel="Cost (USD)")
+                   cmap="Purples", cbarlabel="Range (NM)")
     #texts = annotate_heatmap(im, valfmt="{x:.1f}")
     ax.set_xlabel("Blue Offensive Missile Salvo Size")
     ax.set_ylabel("Blue Offensive Missile Success Probability")
