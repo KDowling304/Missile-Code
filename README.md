@@ -7,7 +7,7 @@ This Excel file has all the inputs into the simulation that can be changed:
 missile_policy_parameters.xlsx
 
 These scripts are the backbone for the simulation and used when running the driver scripts:
-Ship.py\n
+Ship.py
 OffensiveMissile.py
 DefensiveMissile.py
 ESSM.py
