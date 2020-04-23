@@ -3,7 +3,8 @@
 """
 Created on Wed Jan 29 09:08:02 2020
 
-@author: karadowling
+Code needed to create heatmaps in the scripts of simulations that change two inputs.
+
 THIS CODE IS FROM: 
 https://matplotlib.org/gallery/images_contours_and_fields/image_annotated_heatmap.html
 """

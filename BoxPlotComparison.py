@@ -7,9 +7,11 @@ Created on Thu Jul 11 11:14:19 2019
 code adapted from ORF 411 AssetSelling problem code found at link below
 https://github.com/wbpowell328/stochastic-optimization/tree/master/AssetSelling
 
-This is a simulation of a two-agent surface ship missile engagement.  
-The simulation starts with the Red Ship firing at the Blue Ship and ends when 
+This script runs multiple simulations of a two-agent surface ship missile engagement.  
+The simulation starts with one or both of the ships firing offensive missiles and ends when 
 either ship is hit by a missle or both ships are out of missiles.
+
+The script changes Red and Blue's use of satellite and creates boxplots to show the output.
 """
 
 #from collections import namedtuple
@@ -913,70 +915,6 @@ if __name__ == "__main__":
             BothShipHitNumber4 = BothShipHitNumber4 + 1
         if(RedShipHit4[s] == False and BlueShipHit4[s] == False):
             NoShipHitNumber4 = NoShipHitNumber4 + 1
-        
-        
-    '''BothShipHitProp = BothShipHitNumber/len(RedShipHit)
-    print("Proportion of Iterations Both Ships Hit: " + str(BothShipHitProp))
-    NoShipHitProp = NoShipHitNumber/len(RedShipHit)
-    print("Proportion of Iterations No Ships Hit: " + str(NoShipHitProp))
-    print()
-    
-    print("Median Blue Offensive Missiles Fired: " + str(np.median(BlueNumberOffensiveMissiles)) + " of total " + str(blueShip.offensiveMissileTotal))
-    print("Average Blue Offensive Missiles Fired: " + str(np.mean(BlueNumberOffensiveMissiles)) + " of total " + str(blueShip.offensiveMissileTotal))
-    print("Standard Deviation of Blue Offensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberOffensiveMissiles))))
-    print("Median Red Offensive Missiles Fired: " + str(np.median(RedNumberOffensiveMissiles)) + " of total " + str(redShip.offensiveMissileTotal))
-    print("Average Red Offensive Missiles Fired: " + str(np.mean(RedNumberOffensiveMissiles)) + " of total " + str(redShip.offensiveMissileTotal))
-    print("Standard Deviation of Red Offensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberOffensiveMissiles))))
-    print()
-    
-    print("Median Blue Defensive Missiles Fired: " + str(np.median(BlueNumberDefensiveMissiles)) + " of total " + str(blueShip.defensiveMissileTotal))
-    print("Average Blue Defensive Missiles Fired: " + str(np.mean(BlueNumberDefensiveMissiles)) + " of total " + str(blueShip.defensiveMissileTotal))
-    print("Standard Deviation of Blue Defensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(BlueNumberDefensiveMissiles))))
-    print("Median Red Defensive Missiles Fired: " + str(np.median(RedNumberDefensiveMissiles)) + " of total " + str(redShip.defensiveMissileTotal))
-    print("Average Red Defensive Missiles Fired: " + str(np.mean(RedNumberDefensiveMissiles)) + " of total " + str(redShip.defensiveMissileTotal))
-    print("Standard Deviation of Red Defensive Missiles Fired: " + '{:,.2f}'.format(np.sqrt(np.var(RedNumberDefensiveMissiles))))
-    print()
-
-    
-    print("Median Blue Cost: " + '{:,.2f}'.format(np.median(BlueShipCost)))
-    print("Average Blue Cost: " + '{:,.2f}'.format(np.mean(BlueShipCost)))
-    print("Standard Deviation of Blue Cost: " + '{:,.2f}'.format(np.sqrt(np.var(BlueShipCost))))
-    print("Median Red Cost: " + '{:,.2f}'.format(np.median(RedShipCost)))
-    print("Average Red Cost: " + '{:,.2f}'.format(np.mean(RedShipCost)))
-    print("Standard Deviation of Red Cost: " + '{:,.2f}'.format(np.sqrt(np.var(RedShipCost))))
-    print()
-    
-    plt.scatter(iterationArray, BlueNumberOffensiveMissiles, color='blue', label='Blue Ship')
-    plt.scatter(iterationArray, RedNumberOffensiveMissiles, color='red', label='Red Ship')
-    plt.legend()
-    #plt.ylim(0, 1 + max(redShip.offensiveMissileTotal, blueShip.offensiveMissileTotal))
-    plt.axes
-    plt.xlabel('Iteration')
-    plt.ylabel('Offensive Missiles Fired')
-    plt.title('Offensive Missiles Fired Per Iteration')
-    plt.savefig('OffensiveMissilesIterations.png', dpi=600)
-    plt.show()
-    
-    plt.scatter(iterationArray, BlueNumberDefensiveMissiles, color='blue', label='Blue Ship')
-    plt.scatter(iterationArray, RedNumberDefensiveMissiles, color='red', label='Red Ship')
-    plt.legend()
-    plt.axes
-    plt.xlabel('Iteration')
-    plt.ylabel('Defensive Missiles Fired')
-    plt.title('Defensive Missiles Fired Per Iteration')
-    plt.savefig('DefensiveMissilesIterations.png', dpi=600)
-    plt.show()
-
-    
-    plt.scatter(iterationArray, BlueShipCost, color='blue', label='Blue')
-    plt.scatter(iterationArray, RedShipCost, color='red', label='Red')
-    plt.legend()
-    plt.axes
-    plt.xlabel('Iteration')
-    plt.ylabel('Cost in USD')
-    plt.title('Missile Engagement Cost')
-    plt.savefig('CostIterations.png', dpi=600)
-    plt.show()'''
     
     intervals = len(RedShipHit)/10
     intervalsRedHitArr = []

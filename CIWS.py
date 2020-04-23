@@ -6,7 +6,7 @@ Created on Fri Aug 23 10:51:24 2019
 @author: karadowling
 
 CIWS Class for both Red and Blue Ships
-A 30mm gun that fires about 3000 rounds each time it is used
+A 30mm gun that fires about 1500 rounds each time it is used
 A Point Defense System
 Used when incoming offensive missile is 1-0 NM from its target
 Method of last defense

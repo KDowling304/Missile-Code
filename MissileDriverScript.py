@@ -7,9 +7,11 @@ Created on Thu Jul 11 11:14:19 2019
 code adapted from ORF 411 AssetSelling problem code found at link below
 https://github.com/wbpowell328/stochastic-optimization/tree/master/AssetSelling
 
-This is a simulation of a two-agent surface ship missile engagement.  
-The simulation starts with the Red Ship firing at the Blue Ship and ends when 
+This is a single simulation of a two-agent surface ship missile engagement.  
+The simulation starts with one or both of the ships firing offensive missiles and ends when 
 either ship is hit by a missle or both ships are out of missiles.
+
+Use the output animationFile.txt from this script to use in the Java visual simulation.
 """
 
 #from collections import namedtuple
