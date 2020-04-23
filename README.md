@@ -1,5 +1,7 @@
 # Missile-Code
-This folder has the code for running simulations of the missile engagement described in Kara Dowling's Princeton University ORFE senior thesis, "A Multi-agent Stochastic Control Model for Adversarial Planning in Naval Operations."
+This folder has the code for running simulations of the missile engagement described in Kara Dowling's 
+Princeton University ORFE senior thesis, 
+"A Multi-agent Stochastic Control Model for Adversarial Planning in Naval Operations."
 
 This Excel file has all the inputs into the simulation that can be changed:
 missile_policy_parameters.xlsx
